@@ -14,6 +14,7 @@ TODOs:
 - Integrate scheduler
 - Job status tracking
 - Redis configuration
+- Localisation
 - Tests
 
 ## Screenshots
