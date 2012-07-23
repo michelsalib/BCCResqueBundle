@@ -42,7 +42,7 @@ Unfortunatly it does not support composer at the moment, so you will need to con
     },
     "require": {
         ...
-        "bcc-resque-bundle": "dev-master",
+        "bcc/resque-bundle": "dev-master",
         "chrisboulton/php-resque": "dev-master"
     },
     "repositories": [
