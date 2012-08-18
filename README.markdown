@@ -29,37 +29,14 @@ Make sure you have redis installed on your machine: http://redis.io/
 
 ### Get the bundle
 
-Add to your `bcc-resque-bundle` to your dependencies. You will also need to require the original `php-resque` library.
-Unfortunatly it does not support composer at the moment, so you will need to configure the import:
+Add to your `bcc-resque-bundle` to your dependencies:
 
 ``` json
 {
-    "autoload": {
-        "psr-0": {
-            ...
-            "Resque" : "vendor/chrisboulton/php-resque/lib/"
-        }
-    },
     "require": {
         ...
-        "bcc/resque-bundle": "dev-master",
-        "chrisboulton/php-resque": "dev-master"
-    },
-    "repositories": [
-        ...
-        {
-            "type": "package",
-            "package": {
-                "name": "chrisboulton/php-resque",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/chrisboulton/php-resque.git",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
-        }
-    ],
+        "bcc/resque-bundle": "dev-master"
+    }
     ...
 }
 ```
