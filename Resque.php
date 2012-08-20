@@ -33,6 +33,22 @@ class Resque
         return null;
     }
 
+    public function enqueueOnce(Job $job, $trackStatus = false)
+    {
+        $queue = new Queue($job->queue);
+        $jobs  = $queue->getJobs();
+
+        foreach ($jobs AS $j) {
+            if ($j->job->payload['class'] == get_class($job)) {
+                if (count(array_intersect($j->args, $job->args)) == count($job->args)) {
+                    return ($trackStatus) ? $j->job->payload['id'] : null;
+                }
+            }
+        }
+
+        return $this->enqueue($job, $trackStatus);
+    }
+
     public function getQueues()
     {
         return \array_map(function ($queue) {
