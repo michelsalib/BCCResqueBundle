@@ -55,14 +55,7 @@
                         <tr>
                             <td>{{ job.name }}</td>
                             <td>
-                                <ul class="unstyled">
-                                    {% for argname, argvalue in job.args %}
-                                        <li>
-                                            <strong>{{ argname }}</strong>
-                                            <span class="pull-right">{{ argvalue }}</span>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                                {{ job.args | json_encode }}
                             </td>
                         </tr>
                     {% else %}
