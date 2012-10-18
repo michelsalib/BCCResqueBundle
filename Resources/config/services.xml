@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="bcc_resque.resque.class">BCC\ResqueBundle\Resque</parameter>
+        <parameter key="bcc_resque.resque.vendor_dir">%kernel.root_dir%/../vendor</parameter>
     </parameters>
 
     <services>

@@ -23,15 +23,19 @@ class StartWorkerCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $globals = 'APP_INCLUDE='.$this->getContainer()->getParameter('kernel.root_dir').'/../vendor/autoload.php VVERBOSE=1 QUEUE='.$input->getArgument('queues');
+        $env = array(
+            'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/autoload.php',
+            'VVERBOSE'    => 1,
+            'QUEUE'       => $input->getArgument('queues')
+        );
 
-        $workerCommand = 'php '.$this->getContainer()->getParameter('kernel.root_dir').'/../vendor/chrisboulton/php-resque/resque.php';
+        $workerCommand = 'php '.$this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/resque.php';
 
         if (!$input->getOption('foreground')) {
             $workerCommand = 'nohup '.$workerCommand.' > '.$this->getContainer()->getParameter('kernel.logs_dir').'/resque.log 2>&1 & echo $!';
         }
 
-        $process = new Process($globals.' '.$workerCommand);
+        $process = new Process($workerCommand, null, $env);
 
         $output->writeln(\sprintf('Starting worker <info>%s</info>', $process->getCommandLine()));
 
