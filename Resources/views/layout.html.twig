@@ -3,8 +3,15 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}BCC Resque{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        {% block stylesheets %}
+            <link rel="stylesheet" href="/bundles/bccresque/css/bootstrap.min.css"/>
+            <style type="text/css">
+                body {
+                    padding-top: 60px;
+                    padding-bottom: 40px;
+                }
+            </style>
+        {% endblock %}
     </head>
     <body>
         {% block body %}{% endblock %}
