@@ -23,6 +23,22 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('vendor_dir')
+                    ->info('Set the vendor dir')
+
+                ->end()
+                ->arrayNode('redis')
+                    ->info('Redis configuration')
+                    ->children()
+                        ->scalarNode('host')
+                            ->info('The redis hostname')
+                        ->end()
+                        ->integerNode('port')
+                            ->info('The redis port')
+                        ->end()
+                        ->integerNode('database')
+                            ->info('The redis database')
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ;

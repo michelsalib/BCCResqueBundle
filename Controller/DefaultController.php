@@ -3,7 +3,6 @@
 namespace BCC\ResqueBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use BCC\ResqueBundle\Resque;
 
 class DefaultController extends Controller
 {
@@ -11,7 +10,6 @@ class DefaultController extends Controller
     {
         return $this->render('BCCResqueBundle:Default:index.html.twig', array(
             'resque'  => $this->get('bcc_resque.resque'),
-            'redis'   => \Resque::redis(),
         ));
     }
 

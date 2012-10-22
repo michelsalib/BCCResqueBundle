@@ -135,10 +135,13 @@
     </div>
 
     <div class="row">
-        <strong class="span2">Host</strong><span class="span3">{{ redis.host }}</span>
+        <strong class="span2">Host</strong><span class="span3">{{ resque.redisConfiguration.host }}</span>
     </div>
     <div class="row">
-        <strong class="span2">Port</strong><span class="span3">{{ redis.port }}</span>
+        <strong class="span2">Port</strong><span class="span3">{{ resque.redisConfiguration.port }}</span>
+    </div>
+    <div class="row">
+        <strong class="span2">Database</strong><span class="span3">{{ resque.redisConfiguration.database }}</span>
     </div>
 
 </div>

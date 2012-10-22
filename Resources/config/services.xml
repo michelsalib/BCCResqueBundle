@@ -7,6 +7,9 @@
     <parameters>
         <parameter key="bcc_resque.resque.class">BCC\ResqueBundle\Resque</parameter>
         <parameter key="bcc_resque.resque.vendor_dir">%kernel.root_dir%/../vendor</parameter>
+        <parameter key="bcc_resque.resque.redis.host">localhost</parameter>
+        <parameter key="bcc_resque.resque.redis.port">6379</parameter>
+        <parameter key="bcc_resque.resque.redis.database">0</parameter>
     </parameters>
 
     <services>
@@ -16,6 +19,11 @@
                 <argument key="kernel.debug">%kernel.debug%</argument>
                 <argument key="kernel.environment">%kernel.environment%</argument>
             </argument>
+            <call method="setRedisConfiguration">
+                <argument>%bcc_resque.resque.redis.host%</argument>
+                <argument>%bcc_resque.resque.redis.port%</argument>
+                <argument>%bcc_resque.resque.redis.database%</argument>
+            </call>
         </service>
     </services>
 </container>

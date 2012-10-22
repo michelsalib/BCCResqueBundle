@@ -64,7 +64,7 @@ And make a `php composer.phar update`.
 Add to your `routing.yml`:
 
 ``` yml
-#BCCResqueBundle routing
+# app/config/routing.yml
 BCCResqueBundle:
     resource: "@BCCResqueBundle/Resources/config/routing.xml"
     prefix:   /resque
@@ -73,6 +73,20 @@ BCCResqueBundle:
 You can customize the prefix as you wish.
 
 You can now acces the dashboard at this url: `/resque`
+
+### Optional, set configuration
+
+You may want to add some configuration to your `config.yml`
+
+``` yml
+# app/config/config.yml
+bcc_resque:
+    vendor_dir: %kernel.root_dir%/../vendor  # the vendor dir if different from default
+    redis:
+        host: localhost                      # the redis host
+        port: 6379                           # the redis port
+        database: 0                          # the redis database
+```
 
 ## Creating a Job
 

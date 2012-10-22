@@ -9,6 +9,11 @@ class Resque
      */
     private $kernelOptions;
 
+    /**
+     * @var array
+     */
+    private $redisConfiguration;
+
     function __construct(array $kernelOptions)
     {
         $this->kernelOptions = $kernelOptions;
@@ -16,6 +21,22 @@ class Resque
         // HACK, prune dead workers, just in case
         $worker = new \Resque_Worker('temp');
         $worker->pruneDeadWorkers();
+    }
+
+    public function setRedisConfiguration($host, $port, $database)
+    {
+        $this->redisConfiguration = array(
+            'host'     => $host,
+            'port'     => $port,
+            'database' => $database,
+        );
+
+        \Resque::setBackend($host.':'.$port, $database);
+    }
+
+    public function getRedisConfiguration()
+    {
+        return $this->redisConfiguration;
     }
 
     public function enqueue(Job $job, $trackStatus = false)
