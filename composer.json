@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "2.1.*",
+        "symfony/framework-bundle": "<=2.2-dev",
         "chrisboulton/php-resque": "1.2.*"
     },
     "autoload": {
