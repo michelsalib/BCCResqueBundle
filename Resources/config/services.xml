@@ -4,14 +4,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="bcc_resque.resque.class">BCC\ResqueBundle\Resque</parameter>
-        <parameter key="bcc_resque.resque.vendor_dir">%kernel.root_dir%/../vendor</parameter>
-        <parameter key="bcc_resque.resque.redis.host">localhost</parameter>
-        <parameter key="bcc_resque.resque.redis.port">6379</parameter>
-        <parameter key="bcc_resque.resque.redis.database">0</parameter>
-    </parameters>
-
     <services>
         <service id="bcc_resque.resque" class="%bcc_resque.resque.class%">
             <argument type="collection">
