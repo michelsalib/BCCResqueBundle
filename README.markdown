@@ -81,6 +81,7 @@ You may want to add some configuration to your `config.yml`
 ``` yml
 # app/config/config.yml
 bcc_resque:
+    class: BCC\ResqueBundle\Resque  # the resque class if different from default
     vendor_dir: %kernel.root_dir%/../vendor  # the vendor dir if different from default
     redis:
         host: localhost                      # the redis host
