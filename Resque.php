@@ -19,8 +19,8 @@ class Resque
         $this->kernelOptions = $kernelOptions;
 
         // HACK, prune dead workers, just in case
-        $worker = new \Resque_Worker('temp');
-        $worker->pruneDeadWorkers();
+       // $worker = new \Resque_Worker('temp');
+       // $worker->pruneDeadWorkers();
     }
 
     public function setRedisConfiguration($host, $port, $database)
