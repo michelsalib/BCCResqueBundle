@@ -86,7 +86,7 @@ bcc_resque:
     redis:
         host: localhost                      # the redis host
         port: 6379                           # the redis port
-        database: 0                          # the redis database
+        database:  1                         # the redis database
 ```
 
 ## Creating a Job
