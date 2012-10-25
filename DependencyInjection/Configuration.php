@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('bcc_resque');
 
         $rootNode
+            ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('vendor_dir')
                     ->defaultValue('%kernel.root_dir%/../vendor')
@@ -34,6 +35,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('redis')
                     ->info('Redis configuration')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('host')
                             ->defaultValue('localhost')
