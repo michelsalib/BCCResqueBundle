@@ -1,5 +1,6 @@
 # Intro to BCC Resque Bundle
 
+
 The BCC resque bundle provides integration of php-resque to Symfony2. It is inspired from resque, a Redis-backed Ruby library for creating background jobs, placing them on multiple queues, and processing them later.
 
 ## Features:
