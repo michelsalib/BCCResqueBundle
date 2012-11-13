@@ -8,10 +8,11 @@ The BCC resque bundle provides integration of php-resque to Symfony2. It is insp
 - Enqueue a Job wih parameters on a given queue
 - Creating background worker on a given queue
 - A UX to monitor your queues, workers and job statuses
+- ability to schedule jobs to run at a specific time or after a number of seconds delay
 
 TODOs:
 - Log management
-- Integrate scheduler
+- Show scheduled jobs on monitor UI
 - Job status tracking
 - Redis configuration
 - Localisation
@@ -41,7 +42,36 @@ Add to your `bcc-resque-bundle` to your dependencies:
 }
 ```
 
-And make a `php composer.phar update`.
+Note: there is a problem with php-resque-scheduler which has been fixed in a
+pull request (https://github.com/chrisboulton/php-resque-scheduler/pull/3). For now you might need to add
+
+``` json
+{
+    "require": {
+        ...
+        "chrisboulton/php-resque": "dev-master as 1.2",
+        "chrisboulton/php-resque-scheduler": "dev-update_one as dev-master"
+    }
+    ...
+}
+```
+
+and
+
+``` json
+{
+    "repositories":[
+        {
+            "type": "vcs",
+            "url": "https://github.com/atorres757/php-resque-scheduler"
+        }
+    ]
+}
+```
+
+to your project composer.json.
+
+To install, run `php composer.phar update`.
 
 ### Add BCCResqueBundle to your application kernel
 
@@ -141,6 +171,53 @@ Just by using the following command you will create a worker on the default queu
 You can run a worker on several queues just separeate then using `,`. If you want a worker on every queues, just use `*`.
 You can also run a worker foreground by adding the `--foreground` option;
 
+## Adding a delayed job to a queue
+
+You can specify that a job is run at a specific time or after a specific delay (in seconds).
+
+From your controller you can do:
+
+``` php
+<?php
+
+// get resque
+$resque = $this->get('bcc_resque.resque');
+
+// create your job
+$job = new MyJob();
+$job->args = array(
+    'file'    => '/tmp/file',
+    'content' => 'hello',
+);
+
+// enqueue your job to run at a specific \DateTime or int unix timestamp
+$resque->enqueueAt(\DateTime|int $at, $job);
+
+// or
+
+// enqueue your job to run after a number of seconds
+$resque->enqueueIn($seconds, $job);
+
+```
+
+You must also run a `scheduledworker`, which is responsible for taking items out of the special delayed queue and putting
+them into the originally specified queue.
+
+`app/console bcc:resque:scheduledworker-start`
+
+Stop it later with `app/console bcc:resque:scheduledworker-stop`.
+
+Note that when run in background mode it creates a PID file in 'cache/<environment>/bcc_resque_scheduledworker.pid'. If you
+clear your cache while the scheduledworker is running you won't be able to stop it with the `scheduledworker-stop` command.
+
+Alternatively, you can run the scheduledworker in the foreground with the `--foreground` option.
+
+Note also you should only ever have one scheduledworker running, and if the PID file already exists you will have to use
+the `--force` option to start a scheduledworker.
+
+Pro tip: you might want to investigate using something like http://supervisord.org to manage worker processes in your
+production environment.
+
 ## More features
 
 ### Changing the queue
@@ -170,7 +247,7 @@ class MyJob extends Job
 }
 ```
 
-Or from outsite the job:
+Or from outside the job:
 
 ``` php
 <?php
