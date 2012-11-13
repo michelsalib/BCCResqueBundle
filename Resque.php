@@ -70,6 +70,26 @@ class Resque
         return $this->enqueue($job, $trackStatus);
     }
 
+    public function enqueueAt($at,Job $job)
+    {
+        if ($job instanceof ContainerAwareJob) {
+            $job->setKernelOptions($this->kernelOptions);
+        }
+
+        \ResqueScheduler::enqueueAt($at, $job->queue, \get_class($job), $job->args);
+        return null;
+    }
+
+    public function enqueueIn($in,Job $job)
+    {
+        if ($job instanceof ContainerAwareJob) {
+            $job->setKernelOptions($this->kernelOptions);
+        }
+
+        \ResqueScheduler::enqueueIn($in, $job->queue, \get_class($job), $job->args);
+        return null;
+    }
+
     public function getQueues()
     {
         return \array_map(function ($queue) {
