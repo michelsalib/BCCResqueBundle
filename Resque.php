@@ -90,6 +90,16 @@ class Resque
         return null;
     }
 
+    public function removedDelayed(Job $job)
+    {
+        return \ResqueScheduler::removeDelayed($job->queue, \get_class($job),$job->args);
+    }
+
+    public function removeFromTimestamp($at, Job $job)
+    {
+        return \ResqueScheduler::removeDelayedJobFromTimestamp($at, $job->queue, \get_class($job), $job->args);
+    }
+
     public function getQueues()
     {
         return \array_map(function ($queue) {
