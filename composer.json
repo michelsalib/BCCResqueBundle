@@ -20,5 +20,5 @@
     "autoload": {
         "psr-0": { "BCC\\ResqueBundle": "" }
     },
-    "target-dir": "BCC/ResqueBundle",
+    "target-dir": "BCC/ResqueBundle"
 }
