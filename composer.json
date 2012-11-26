@@ -14,8 +14,8 @@
     ],
     "require": {
         "symfony/framework-bundle": "<=2.2.x-dev",
-        "chrisboulton/php-resque": "*",
-        "chrisboulton/php-resque-scheduler": "*"
+        "chrisboulton/php-resque": "dev-master",
+        "chrisboulton/php-resque-scheduler": "dev-master"
     },
     "autoload": {
         "psr-0": { "BCC\\ResqueBundle": "" }
