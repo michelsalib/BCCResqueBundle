@@ -21,8 +21,4 @@
         "psr-0": { "BCC\\ResqueBundle": "" }
     },
     "target-dir": "BCC/ResqueBundle",
-    "repositories": [
-        { "type": "git", "url": "https://github.com/chrisboulton/php-resque-scheduler" }
-    ]
-
 }
