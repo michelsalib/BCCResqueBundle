@@ -20,5 +20,9 @@
     "autoload": {
         "psr-0": { "BCC\\ResqueBundle": "" }
     },
+    "repositories": [
+        { "type": "git", "url": "https://github.com/chrisboulton/php-resque" },
+        { "type": "git", "url": "https://github.com/chrisboulton/php-resque-scheduler" }
+    ],
     "target-dir": "BCC/ResqueBundle"
 }
