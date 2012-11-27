@@ -132,4 +132,46 @@ class Resque
 
         return new Worker($worker);
     }
+
+    public function getDelayedJobTimestamps()
+    {
+        $timestamps= \Resque::redis()->zrange('delayed_queue_schedule', 0, -1);
+
+        //TODO: find a more efficient way to do this
+        $out=array();
+        foreach($timestamps as $timestamp)
+        {
+            $out[]=array($timestamp,\Resque::redis()->llen('delayed:'.$timestamp));
+        }
+
+        return $out;
+    }
+
+    public function getFirstDelayedJobTimestamp()
+    {
+        $timestamps=$this->getDelayedJobTimestamps();
+        if(count($timestamps)>0)
+        {
+            return $timestamps[0];
+        }
+
+        return array(null,0);
+    }
+
+    public function getNumberOfDelayedJobs()
+    {
+        return \ResqueScheduler::getDelayedQueueScheduleSize();
+    }
+
+    public function getJobsForTimestamp($timestamp)
+    {
+        $jobs= \Resque::redis()->lrange('delayed:'.$timestamp,0, -1);
+        $out=array();
+        foreach($jobs as $job)
+        {
+            $out[]=json_decode($job, true);
+        }
+        return $out;
+    }
+
 }

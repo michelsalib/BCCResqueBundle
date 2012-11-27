@@ -12,7 +12,6 @@ The BCC resque bundle provides integration of php-resque to Symfony2. It is insp
 
 TODOs:
 - Log management
-- Show scheduled jobs on monitor UI
 - Job status tracking
 - Redis configuration
 - Localisation
