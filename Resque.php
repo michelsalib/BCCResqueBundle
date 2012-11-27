@@ -88,11 +88,19 @@ class Resque
 
     public function removedDelayed(Job $job)
     {
+        if ($job instanceof ContainerAwareJob) {
+            $job->setKernelOptions($this->kernelOptions);
+        }
+
         return \ResqueScheduler::removeDelayed($job->queue, \get_class($job),$job->args);
     }
 
     public function removeFromTimestamp($at, Job $job)
     {
+        if ($job instanceof ContainerAwareJob) {
+            $job->setKernelOptions($this->kernelOptions);
+        }
+
         return \ResqueScheduler::removeDelayedJobFromTimestamp($at, $job->queue, \get_class($job), $job->args);
     }
 
