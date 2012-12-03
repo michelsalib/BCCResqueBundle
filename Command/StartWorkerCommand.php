@@ -25,7 +25,6 @@ class StartWorkerCommand extends ContainerAwareCommand
     {
         $env = array(
             'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/autoload.php',
-            'VVERBOSE'    => 1,
             'QUEUE'       => $input->getArgument('queues')
         );
 
