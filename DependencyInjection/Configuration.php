@@ -48,7 +48,7 @@ class Configuration implements ConfigurationInterface
                             ->info('The redis port')
                         ->end()
                         ->scalarNode('database')
-                            ->defaultValue(0)
+                            ->defaultValue(1)
                             ->cannotBeEmpty()
                             ->info('The redis database')
                         ->end()
