@@ -4,7 +4,6 @@ namespace BCC\ResqueBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use BCC\ResqueBundle\Resque;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -28,8 +27,7 @@ class StopWorkerCommand extends ContainerAwareCommand
 
         if ($input->getOption('all')) {
             $workers = $resque->getWorkers();
-        }
-        else {
+        } else {
             $worker = $resque->getWorker($input->getArgument('id'));
 
             if (!$worker) {
@@ -37,13 +35,13 @@ class StopWorkerCommand extends ContainerAwareCommand
                 if (!empty($availableWorkers)) {
                     $output->writeln('<error>You need to give an existing worker.</error>');
                     $output->writeln('Running workers are:');
-                    foreach($resque->getWorkers() as $worker) {
+                    foreach ($resque->getWorkers() as $worker) {
                         $output->writeln($worker->getId());
                     }
-                }
-                else {
+                } else {
                     $output->writeln('<error>There is no running worker.</error>');
                 }
+
                 return 1;
             }
 
