@@ -14,7 +14,7 @@ class Resque
      */
     private $redisConfiguration;
 
-    function __construct(array $kernelOptions)
+    public function __construct(array $kernelOptions)
     {
         $this->kernelOptions = $kernelOptions;
     }
@@ -84,7 +84,7 @@ class Resque
     {
         $worker = \Resque_Worker::find($id);
 
-        if(!$worker) {
+        if (!$worker) {
             return null;
         }
 

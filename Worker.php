@@ -16,7 +16,7 @@ class Worker
 
     public function getId()
     {
-        return (string)$this->worker;
+        return (string) $this->worker;
     }
 
     public function stop()
@@ -47,8 +47,7 @@ class Worker
     {
         $job = $this->worker->job();
 
-        if (!$job)
-        {
+        if (!$job) {
             return null;
         }
 
@@ -59,8 +58,7 @@ class Worker
     {
         $job = $this->worker->job();
 
-        if (!$job)
-        {
+        if (!$job) {
             return null;
         }
 
