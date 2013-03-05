@@ -41,34 +41,19 @@ Add to your `bcc-resque-bundle` to your dependencies:
 }
 ```
 
-Note: there is a problem with php-resque-scheduler which has been fixed in a
-pull request (https://github.com/chrisboulton/php-resque-scheduler/pull/3). For now you might need to add
-
-``` json
-{
-    "require": {
-        ...
-        "chrisboulton/php-resque": "dev-master as 1.2",
-        "chrisboulton/php-resque-scheduler": "dev-update_one as dev-master"
-    }
-    ...
-}
-```
-
-and
+You may also need to add `chrisboulton-phpresque-scheduler` to your dependencies until it's added to packagist:
 
 ``` json
 {
     "repositories":[
         {
-            "type": "vcs",
-            "url": "https://github.com/atorres757/php-resque-scheduler"
+            "type": "git",
+            "url": "https://github.com/chrisboulton/php-resque-scheduler"
         }
+        ...
     ]
 }
 ```
-
-to your project composer.json.
 
 To install, run `php composer.phar update`.
 
@@ -167,7 +152,7 @@ $resque->enqueue($job);
 Just by using the following command you will create a worker on the default queue:
 `app/console bcc:resque:worker-start default`
 
-You can run a worker on several queues just separeate then using `,`. If you want a worker on every queues, just use `*`.
+You can run a worker on several queues just separate then using `,`. If you want a worker on every queues, just use `*`.
 You can also run a worker foreground by adding the `--foreground` option;
 
 ## Adding a delayed job to a queue
