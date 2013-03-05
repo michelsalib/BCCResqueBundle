@@ -34,7 +34,7 @@ abstract class Job
         $this->run($this->args);
     }
 
-    public abstract function run($args);
+    abstract public function run($args);
 
     public function tearDown()
     {

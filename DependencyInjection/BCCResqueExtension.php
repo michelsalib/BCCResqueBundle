@@ -29,7 +29,7 @@ class BCCResqueExtension extends Extension
         $container->setParameter('bcc_resque.resque.redis.host', $config['redis']['host']);
         $container->setParameter('bcc_resque.resque.redis.port', $config['redis']['port']);
         $container->setParameter('bcc_resque.resque.redis.database', $config['redis']['database']);
-        
+
         $loader->load('services.xml');
 
     }
