@@ -86,7 +86,7 @@ bcc_resque:
     redis:
         host: localhost                      # the redis host
         port: 6379                           # the redis port
-        database:  1                         # the redis database
+        database: 1                          # the redis database
 ```
 
 ## Creating a Job
@@ -139,7 +139,14 @@ Just by using the following command you will create a worker on the default queu
 `app/console bcc:resque:worker-start default`
 
 You can run a worker on several queues just separeate then using `,`. If you want a worker on every queues, just use `*`.
+
 You can also run a worker foreground by adding the `--foreground` option;
+
+By default `VERBOSE` environment variable is set when calling php-resque
+- `--verbose` option sets `VVERBOSE`
+- `--quiet` disables both so no debug output is thrown
+
+See php-resque logging option : https://github.com/chrisboulton/php-resque#logging
 
 ## More features
 

@@ -26,9 +26,15 @@ class StartWorkerCommand extends ContainerAwareCommand
     {
         $env = array(
             'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/autoload.php',
-            'VVERBOSE'    => 1,
-            'QUEUE'       => $input->getArgument('queues')
+            'QUEUE'       => $input->getArgument('queues'),
+            'VERBOSE'     => 1,
         );
+        if ($input->getOption('verbose')) {
+            $env['VVERBOSE'] = 1;
+        }
+        if ($input->getOption('quiet')) {
+            unset($env['VERBOSE']);
+        }
         $opt = '';
         if (0 !== $m = (int) $input->getOption('memory-limit')) {
             $opt = sprintf('-d memory_limit=%dM', $m);
@@ -47,7 +53,9 @@ class StartWorkerCommand extends ContainerAwareCommand
 
         $process = new Process($workerCommand, null, $env);
 
-        $output->writeln(\sprintf('Starting worker <info>%s</info>', $process->getCommandLine()));
+        if (!$input->getOption('quiet')) {
+            $output->writeln(\sprintf('Starting worker <info>%s</info>', $process->getCommandLine()));
+        }
 
         // if foreground, we redirect output
         if ($input->getOption('foreground')) {
@@ -64,7 +72,9 @@ class StartWorkerCommand extends ContainerAwareCommand
             } else {
                 $hostname = php_uname('n');
             }
-            $output->writeln(\sprintf('<info>Worker started</info> %s:%s:%s', $hostname, $pid, $input->getArgument('queues')));
+            if (!$input->getOption('quiet')) {
+                $output->writeln(\sprintf('<info>Worker started</info> %s:%s:%s', $hostname, $pid, $input->getArgument('queues')));
+            }
         }
     }
 }
