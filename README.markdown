@@ -199,8 +199,31 @@ Alternatively, you can run the scheduledworker in the foreground with the `--for
 Note also you should only ever have one scheduledworker running, and if the PID file already exists you will have to use
 the `--force` option to start a scheduledworker.
 
-Pro tip: you might want to investigate using something like http://supervisord.org to manage worker processes in your
-production environment.
+## Manage production workers with supervisord
+
+It's probably best to use supervisord (http://supervisord.org) to run the workers in production, rather than re-invent job
+spawning, monitoring, stopping and restarting.
+
+Here's a sample conf file
+
+```ini
+[program:myapp_phpresque_default]
+command = /usr/bin/php /home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/resque.php
+user = myusername
+environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',QUEUE='default'
+
+[program:myapp_phpresque_scheduledworker]
+command = /usr/bin/php /home/sites/myapp/prod/current/vendor/chrisboulton/php-resque-scheduler/resque-scheduler.php
+user = myusername
+environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',RESQUE_PHP='/home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/lib/Resque.php'
+
+[group:myapp]
+programs=myapp_phpresque_default,myapp_phpresque_scheduledworker
+```
+
+Then in Capifony you can do
+
+`sudo supervisorctl stop myapp:*` before deploying your app and `sudo supervisorctl start myapp:*` afterwards.
 
 ## More features
 
