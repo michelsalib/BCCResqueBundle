@@ -135,10 +135,10 @@ $resque->enqueue($job);
 
 ## Running a worker on a queue
 
-Just by using the following command you will create a worker on the default queue:
-`app/console bcc:resque:worker-start default`
-
-You can run a worker on several queues just separeate then using `,`. If you want a worker on every queues, just use `*`.
+Executing the following commands will create a work on :
+- the `default` queue : `app/console bcc:resque:worker-start default`
+- the `q1` and `q2` queue : `app/console bcc:resque:worker-start q1,q2` (separate name with `,`)
+- all existing queues : `app/console bcc:resque:worker-start "*"`
 
 You can also run a worker foreground by adding the `--foreground` option;
 
