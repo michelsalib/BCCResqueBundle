@@ -208,7 +208,7 @@ Here's a sample conf file
 
 ```ini
 [program:myapp_phpresque_default]
-command = /usr/bin/php /home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/resque.php
+command = /usr/bin/php /home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/bin/resque
 user = myusername
 environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',QUEUE='default'
 
