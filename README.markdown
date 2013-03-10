@@ -41,6 +41,15 @@ Add to your `bcc-resque-bundle` to your dependencies:
 }
 ```
 
+Right know bcc resque is still in dev phase, make sure you have dev stability in your composer file:
+
+``` json
+{
+    "minimum-stability": "dev"
+    ...
+}
+```
+
 You may also need to add `chrisboulton-phpresque-scheduler` to your dependencies until it's added to packagist:
 
 ``` json
