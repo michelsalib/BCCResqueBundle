@@ -11,4 +11,10 @@
     <route id="BCCResqueBundle_queue_list" pattern="/queue/list">
         <default key="_controller">BCCResqueBundle:Default:listQueues</default>
     </route>
+    <route id="BCCResqueBundle_scheduled_list" pattern="/scheduled/list">
+        <default key="_controller">BCCResqueBundle:Default:listScheduled</default>
+    </route>
+    <route id="BCCResqueBundle_scheduled_timestamp" pattern="/scheduled/{timestamp}">
+        <default key="_controller">BCCResqueBundle:Default:showTimestamp</default>
+    </route>
 </routes>
