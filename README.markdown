@@ -12,6 +12,7 @@ The BCC resque bundle provides integration of php-resque to Symfony2. It is insp
 
 TODOs:
 - Log management
+- Integrate scheduler
 - Job status tracking
 - Redis configuration
 - Localisation
@@ -41,7 +42,7 @@ Add to your `bcc-resque-bundle` to your dependencies:
 }
 ```
 
-Right know bcc resque is still in dev phase, make sure you have dev stability in your composer file:
+Right now bcc resque is still in dev phase, make sure you have dev stability in your composer file:
 
 ``` json
 {
@@ -109,7 +110,7 @@ bcc_resque:
     redis:
         host: localhost                      # the redis host
         port: 6379                           # the redis port
-        database:  1                         # the redis database
+        database: 1                          # the redis database
 ```
 
 ## Creating a Job
@@ -158,11 +159,18 @@ $resque->enqueue($job);
 
 ## Running a worker on a queue
 
-Just by using the following command you will create a worker on the default queue:
-`app/console bcc:resque:worker-start default`
+Executing the following commands will create a work on :
+- the `default` queue : `app/console bcc:resque:worker-start default`
+- the `q1` and `q2` queue : `app/console bcc:resque:worker-start q1,q2` (separate name with `,`)
+- all existing queues : `app/console bcc:resque:worker-start "*"`
 
-You can run a worker on several queues just separate then using `,`. If you want a worker on every queues, just use `*`.
 You can also run a worker foreground by adding the `--foreground` option;
+
+By default `VERBOSE` environment variable is set when calling php-resque
+- `--verbose` option sets `VVERBOSE`
+- `--quiet` disables both so no debug output is thrown
+
+See php-resque logging option : https://github.com/chrisboulton/php-resque#logging
 
 ## Adding a delayed job to a queue
 
