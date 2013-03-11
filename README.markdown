@@ -36,36 +36,13 @@ Add to your `bcc-resque-bundle` to your dependencies:
 {
     "require": {
         ...
-        "bcc/resque-bundle": "dev-master"
+        "bcc/resque-bundle": "0.5"
     }
     ...
 }
 ```
 
-Right now bcc resque is still in dev phase, make sure you have dev stability in your composer file:
-
-``` json
-{
-    "minimum-stability": "dev"
-    ...
-}
-```
-
-You may also need to add `chrisboulton-phpresque-scheduler` to your dependencies until it's added to packagist:
-
-``` json
-{
-    "repositories":[
-        {
-            "type": "git",
-            "url": "https://github.com/chrisboulton/php-resque-scheduler"
-        }
-        ...
-    ]
-}
-```
-
-To install, run `php composer.phar update`.
+To install, run `php composer.phar [update|install]`.
 
 ### Add BCCResqueBundle to your application kernel
 
