@@ -6,12 +6,12 @@ class Queue
 {
     private $name;
 
-    function __construct($name)
+    public function __construct($name)
     {
         $this->name = $name;
     }
 
-    function getSize()
+    public function getSize()
     {
         return \Resque::size($this->name);
     }

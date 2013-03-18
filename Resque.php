@@ -14,13 +14,9 @@ class Resque
      */
     private $redisConfiguration;
 
-    function __construct(array $kernelOptions)
+    public function __construct(array $kernelOptions)
     {
         $this->kernelOptions = $kernelOptions;
-
-        // HACK, prune dead workers, just in case
-        $worker = new \Resque_Worker('temp');
-        $worker->pruneDeadWorkers();
     }
 
     public function setRedisConfiguration($host, $port, $database)
@@ -70,6 +66,26 @@ class Resque
         return $this->enqueue($job, $trackStatus);
     }
 
+    public function enqueueAt($at,Job $job)
+    {
+        if ($job instanceof ContainerAwareJob) {
+            $job->setKernelOptions($this->kernelOptions);
+        }
+
+        \ResqueScheduler::enqueueAt($at, $job->queue, \get_class($job), $job->args);
+        return null;
+    }
+
+    public function enqueueIn($in,Job $job)
+    {
+        if ($job instanceof ContainerAwareJob) {
+            $job->setKernelOptions($this->kernelOptions);
+        }
+
+        \ResqueScheduler::enqueueIn($in, $job->queue, \get_class($job), $job->args);
+        return null;
+    }
+
     public function getQueues()
     {
         return \array_map(function ($queue) {
@@ -88,10 +104,17 @@ class Resque
     {
         $worker = \Resque_Worker::find($id);
 
-        if(!$worker) {
+        if (!$worker) {
             return null;
         }
 
         return new Worker($worker);
+    }
+
+    public function pruneDeadWorkers()
+    {
+        // HACK, prune dead workers, just in case
+        $worker = new \Resque_Worker('temp');
+        $worker->pruneDeadWorkers();
     }
 }

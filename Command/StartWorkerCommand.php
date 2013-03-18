@@ -18,6 +18,7 @@ class StartWorkerCommand extends ContainerAwareCommand
             ->setDescription('Start a bcc resque worker')
             ->addArgument('queues', InputArgument::REQUIRED, 'Queue names (separate using comma)')
             ->addOption('foreground', 'f', InputOption::VALUE_NONE, 'Should the worker run in foreground')
+            ->addOption('memory-limit', 'm', InputOption::VALUE_REQUIRED, 'Force cli memory_limit (expressed in Mbytes)')
         ;
     }
 
@@ -28,11 +29,20 @@ class StartWorkerCommand extends ContainerAwareCommand
             'VVERBOSE'    => 1,
             'QUEUE'       => $input->getArgument('queues')
         );
-
-        $workerCommand = 'php '.$this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/resque.php';
+        $opt = '';
+        if (0 !== $m = (int) $input->getOption('memory-limit')) {
+            $opt = sprintf('-d memory_limit=%dM', $m);
+        }
+        $workerCommand = strtr('/usr/bin/env php %opt% %dir%/chrisboulton/php-resque/resque.php', array(
+            '%opt%' => $opt,
+            '%dir%' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir'),
+        ));
 
         if (!$input->getOption('foreground')) {
-            $workerCommand = 'nohup '.$workerCommand.' > '.$this->getContainer()->getParameter('kernel.logs_dir').'/resque.log 2>&1 & echo $!';
+            $workerCommand = strtr('nohup %cmd% > %logs_dir%/resque.log 2>&1 & echo $!', array(
+                '%cmd%'      => $workerCommand,
+                '%logs_dir%' => $this->getContainer()->getParameter('kernel.logs_dir'),
+            ));
         }
 
         $process = new Process($workerCommand, null, $env);
@@ -49,10 +59,9 @@ class StartWorkerCommand extends ContainerAwareCommand
         else {
             $process->run();
             $pid = \trim($process->getOutput());
-            if(function_exists('gethostname')) {
+            if (function_exists('gethostname')) {
                 $hostname = gethostname();
-            }
-            else {
+            } else {
                 $hostname = php_uname('n');
             }
             $output->writeln(\sprintf('<info>Worker started</info> %s:%s:%s', $hostname, $pid, $input->getArgument('queues')));
