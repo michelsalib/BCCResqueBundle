@@ -39,7 +39,7 @@ class StartWorkerCommand extends ContainerAwareCommand
         if (0 !== $m = (int) $input->getOption('memory-limit')) {
             $opt = sprintf('-d memory_limit=%dM', $m);
         }
-        $workerCommand = strtr('/usr/bin/env php %opt% %dir%/chrisboulton/php-resque/bin/resque', array(
+        $workerCommand = strtr('php %opt% %dir%/chrisboulton/php-resque/bin/resque', array(
             '%opt%' => $opt,
             '%dir%' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir'),
         ));
@@ -51,7 +51,7 @@ class StartWorkerCommand extends ContainerAwareCommand
             ));
         }
 
-        $process = new Process($workerCommand, null, $env);
+        $process = new Process($workerCommand, null, $env, null, null);
 
         if (!$input->getOption('quiet')) {
             $output->writeln(\sprintf('Starting worker <info>%s</info>', $process->getCommandLine()));
