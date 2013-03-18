@@ -13,7 +13,7 @@ The BCC resque bundle provides integration of php-resque to Symfony2. It is insp
 
 TODOs:
 - Log management
-- Show scheduled jobs on monitor UI
+- Integrate scheduler
 - Job status tracking
 - Redis configuration
 - Localisation
@@ -43,34 +43,28 @@ Add to your `bcc-resque-bundle` to your dependencies:
 }
 ```
 
-Note: there is a problem with php-resque-scheduler which has been fixed in a
-pull request (https://github.com/chrisboulton/php-resque-scheduler/pull/3). For now you might need to add
+Right now bcc resque is still in dev phase, make sure you have dev stability in your composer file:
 
 ``` json
 {
-    "require": {
-        ...
-        "chrisboulton/php-resque": "dev-master as 1.2",
-        "chrisboulton/php-resque-scheduler": "dev-update_one as dev-master"
-    }
+    "minimum-stability": "dev"
     ...
 }
 ```
 
-and
+You may also need to add `chrisboulton-phpresque-scheduler` to your dependencies until it's added to packagist:
 
 ``` json
 {
     "repositories":[
         {
-            "type": "vcs",
-            "url": "https://github.com/atorres757/php-resque-scheduler"
+            "type": "git",
+            "url": "https://github.com/chrisboulton/php-resque-scheduler"
         }
+        ...
     ]
 }
 ```
-
-to your project composer.json.
 
 To install, run `php composer.phar update`.
 
@@ -117,7 +111,7 @@ bcc_resque:
     redis:
         host: localhost                      # the redis host
         port: 6379                           # the redis port
-        database:  1                         # the redis database
+        database: 1                          # the redis database
 ```
 
 ## Creating a Job
@@ -166,11 +160,18 @@ $resque->enqueue($job);
 
 ## Running a worker on a queue
 
-Just by using the following command you will create a worker on the default queue:
-`app/console bcc:resque:worker-start default`
+Executing the following commands will create a work on :
+- the `default` queue : `app/console bcc:resque:worker-start default`
+- the `q1` and `q2` queue : `app/console bcc:resque:worker-start q1,q2` (separate name with `,`)
+- all existing queues : `app/console bcc:resque:worker-start "*"`
 
-You can run a worker on several queues just separeate then using `,`. If you want a worker on every queues, just use `*`.
 You can also run a worker foreground by adding the `--foreground` option;
+
+By default `VERBOSE` environment variable is set when calling php-resque
+- `--verbose` option sets `VVERBOSE`
+- `--quiet` disables both so no debug output is thrown
+
+See php-resque logging option : https://github.com/chrisboulton/php-resque#logging
 
 ## Adding a delayed job to a queue
 
@@ -216,8 +217,31 @@ Alternatively, you can run the scheduledworker in the foreground with the `--for
 Note also you should only ever have one scheduledworker running, and if the PID file already exists you will have to use
 the `--force` option to start a scheduledworker.
 
-Pro tip: you might want to investigate using something like http://supervisord.org to manage worker processes in your
-production environment.
+## Manage production workers with supervisord
+
+It's probably best to use supervisord (http://supervisord.org) to run the workers in production, rather than re-invent job
+spawning, monitoring, stopping and restarting.
+
+Here's a sample conf file
+
+```ini
+[program:myapp_phpresque_default]
+command = /usr/bin/php /home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/bin/resque
+user = myusername
+environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',QUEUE='default'
+
+[program:myapp_phpresque_scheduledworker]
+command = /usr/bin/php /home/sites/myapp/prod/current/vendor/chrisboulton/php-resque-scheduler/resque-scheduler.php
+user = myusername
+environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',RESQUE_PHP='/home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/lib/Resque.php'
+
+[group:myapp]
+programs=myapp_phpresque_default,myapp_phpresque_scheduledworker
+```
+
+Then in Capifony you can do
+
+`sudo supervisorctl stop myapp:*` before deploying your app and `sudo supervisorctl start myapp:*` afterwards.
 
 ## More features
 

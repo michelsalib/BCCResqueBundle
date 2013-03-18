@@ -86,6 +86,24 @@ class Resque
         return null;
     }
 
+    public function removedDelayed(Job $job)
+    {
+        if ($job instanceof ContainerAwareJob) {
+            $job->setKernelOptions($this->kernelOptions);
+        }
+
+        return \ResqueScheduler::removeDelayed($job->queue, \get_class($job),$job->args);
+    }
+
+    public function removeFromTimestamp($at, Job $job)
+    {
+        if ($job instanceof ContainerAwareJob) {
+            $job->setKernelOptions($this->kernelOptions);
+        }
+
+        return \ResqueScheduler::removeDelayedJobFromTimestamp($at, $job->queue, \get_class($job), $job->args);
+    }
+
     public function getQueues()
     {
         return \array_map(function ($queue) {
@@ -117,4 +135,46 @@ class Resque
         $worker = new \Resque_Worker('temp');
         $worker->pruneDeadWorkers();
     }
+
+    public function getDelayedJobTimestamps()
+    {
+        $timestamps= \Resque::redis()->zrange('delayed_queue_schedule', 0, -1);
+
+        //TODO: find a more efficient way to do this
+        $out=array();
+        foreach($timestamps as $timestamp)
+        {
+            $out[]=array($timestamp,\Resque::redis()->llen('delayed:'.$timestamp));
+        }
+
+        return $out;
+    }
+
+    public function getFirstDelayedJobTimestamp()
+    {
+        $timestamps=$this->getDelayedJobTimestamps();
+        if(count($timestamps)>0)
+        {
+            return $timestamps[0];
+        }
+
+        return array(null,0);
+    }
+
+    public function getNumberOfDelayedJobs()
+    {
+        return \ResqueScheduler::getDelayedQueueScheduleSize();
+    }
+
+    public function getJobsForTimestamp($timestamp)
+    {
+        $jobs= \Resque::redis()->lrange('delayed:'.$timestamp,0, -1);
+        $out=array();
+        foreach($jobs as $job)
+        {
+            $out[]=json_decode($job, true);
+        }
+        return $out;
+    }
+
 }

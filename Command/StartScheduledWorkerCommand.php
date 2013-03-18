@@ -29,14 +29,16 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             throw new \Exception('PID file exists - use --force to override');
         }
 
-        unlink($pidFile);
+        if(file_exists($pidFile))
+        {
+            unlink($pidFile);
+        }
 
         $env = array(
             'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/autoload.php',
             'VVERBOSE'    => 1,
             'RESQUE_PHP' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/lib/Resque.php',
         );
-
 
         $workerCommand = 'php '.$this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque-scheduler/resque-scheduler.php';
 
