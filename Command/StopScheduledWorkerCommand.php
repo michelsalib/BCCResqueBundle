@@ -10,6 +10,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+if (!defined('SIGTERM')) define('SIGTERM', 15);
+
 class StopScheduledWorkerCommand extends ContainerAwareCommand
 {
     protected function configure()
