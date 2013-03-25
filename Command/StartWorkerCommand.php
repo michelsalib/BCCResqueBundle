@@ -35,11 +35,22 @@ class StartWorkerCommand extends ContainerAwareCommand
         if ($input->getOption('quiet')) {
             unset($env['VERBOSE']);
         }
+
+        $redisHost = $this->getContainer()->getParameter('bcc_resque.resque.redis.host');
+        $redisPort = $this->getContainer()->getParameter('bcc_resque.resque.redis.port');
+        $redisDatabase = $this->getContainer()->getParameter('bcc_resque.resque.redis.database');
+        if ($redisHost != null && $redisPort != null) {
+            $env['REDIS_BACKEND'] = $redisHost.':'.$redisPort;
+        }
+        if (isset($redisDatabase)) {
+            $env['REDIS_BACKEND_DB'] = $redisDatabase;
+        }
+
         $opt = '';
         if (0 !== $m = (int) $input->getOption('memory-limit')) {
             $opt = sprintf('-d memory_limit=%dM', $m);
         }
-        $workerCommand = strtr('php %opt% %dir%/chrisboulton/php-resque/bin/resque', array(
+        $workerCommand = strtr('php %opt% %dir%/chrisboulton/php-resque/resque.php', array(
             '%opt%' => $opt,
             '%dir%' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir'),
         ));
