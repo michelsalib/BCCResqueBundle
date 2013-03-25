@@ -177,4 +177,15 @@ class Resque
         return $out;
     }
 
+    /**
+     * @param $queue
+     * @return int
+     */
+    public function clearQueue($queue)
+    {
+        $length=\Resque::redis()->llen('queue:'.$queue);
+        \Resque::redis()->del('queue:'.$queue);
+        return $length;
+    }
+
 }
