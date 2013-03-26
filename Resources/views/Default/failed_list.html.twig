@@ -1,61 +1,39 @@
 {% extends 'BCCResqueBundle::layout.html.twig' %}
-
 {% block body %}
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="brand" href="{{ path('BCCResqueBundle_homepage') }}">
-                    BCC Resque
-                </a>
-                <ul class="nav">
-                    <li><a href="{{ path('BCCResqueBundle_homepage') }}">Home</a></li>
-                    <li><a href="{{ path('BCCResqueBundle_queue_list') }}">Queues</a></li>
-                    <li><a href="{{ path('BCCResqueBundle_scheduled_list') }}">Scheduled</a></li>
-                    <li class="active"><a href="#">Failed jobs</a></li>
-                </ul>
-            </div>
-        </div>
+{% include "BCCResqueBundle:default:_menu.html.twig" with {activeNav: 'failed_list'} %}
+<div class="container">
+    <div class="row span12">
+        <h2>Failed Jobs</h2>
+        {% include "BCCResqueBundle:default:_miniPager.html.twig" %}
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Queue</th>
+                    <th>Failed at</th>
+                    <th>Job</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td class="span1">{{ job.queueName }}</td>
+                    <td class="span2">{{ job.failedAt|date('Y-m-d H:i:s') }}</td>
+                    <td class="span4">{{ job.name }}</td>
+                    <td class="span5">
+                        {{ job.exceptionClass }}<br>
+                        {{ job.error }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">
+                        <em>empty...</em>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-    <div class="container">
-
-        <div class="row">
-            <h2 class="span">
-                Failed jobs
-            </h2>
-        </div>
-
-        <div class="row">
-            <div class="span">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th class="span5">Queue</th>
-                        <th class="span5">Failed at</th>
-                        <th class="span5">Job</th>
-                        <th class="span5">Error</th>
-                    </tr>
-                    </thead>
-                    {% for job in failed %}
-                        <tr>
-                            <td>{{ job.queueName }}</td>
-                            <td>{{ job.failedAt }}</td>
-                            <td>{{ job.name }}</td>
-                            <td>
-                                {{ job.exceptionClass }}<br>
-                                {{ job.error }}
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="5">
-                                <em>empty...</em>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-
-    </div>
+</div>
 {% endblock %}

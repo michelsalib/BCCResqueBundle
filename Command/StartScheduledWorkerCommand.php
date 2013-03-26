@@ -4,7 +4,6 @@ namespace BCC\ResqueBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,13 +23,11 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $pidFile=$this->getContainer()->get('kernel')->getCacheDir().'/bcc_resque_scheduledworker.pid';
-        if(file_exists($pidFile) && !$input->getOption('force'))
-        {
+        if (file_exists($pidFile) && !$input->getOption('force')) {
             throw new \Exception('PID file exists - use --force to override');
         }
 
-        if(file_exists($pidFile))
-        {
+        if (file_exists($pidFile)) {
             unlink($pidFile);
         }
 
@@ -77,10 +74,9 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
         else {
             $process->run();
             $pid = \trim($process->getOutput());
-            if(function_exists('gethostname')) {
+            if (function_exists('gethostname')) {
                 $hostname = gethostname();
-            }
-            else {
+            } else {
                 $hostname = php_uname('n');
             }
             $output->writeln(\sprintf('<info>Worker started</info> %s:%s', $hostname, $pid));
