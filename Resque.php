@@ -73,6 +73,7 @@ class Resque
         }
 
         \ResqueScheduler::enqueueAt($at, $job->queue, \get_class($job), $job->args);
+
         return null;
     }
 
@@ -83,6 +84,7 @@ class Resque
         }
 
         \ResqueScheduler::enqueueIn($in, $job->queue, \get_class($job), $job->args);
+
         return null;
     }
 
@@ -151,8 +153,7 @@ class Resque
 
         //TODO: find a more efficient way to do this
         $out=array();
-        foreach($timestamps as $timestamp)
-        {
+        foreach ($timestamps as $timestamp) {
             $out[]=array($timestamp,\Resque::redis()->llen('delayed:'.$timestamp));
         }
 
@@ -162,8 +163,7 @@ class Resque
     public function getFirstDelayedJobTimestamp()
     {
         $timestamps=$this->getDelayedJobTimestamps();
-        if(count($timestamps)>0)
-        {
+        if (count($timestamps)>0) {
             return $timestamps[0];
         }
 
@@ -179,10 +179,10 @@ class Resque
     {
         $jobs= \Resque::redis()->lrange('delayed:'.$timestamp,0, -1);
         $out=array();
-        foreach($jobs as $job)
-        {
+        foreach ($jobs as $job) {
             $out[]=json_decode($job, true);
         }
+
         return $out;
     }
 
@@ -194,9 +194,9 @@ class Resque
     {
         $length=\Resque::redis()->llen('queue:'.$queue);
         \Resque::redis()->del('queue:'.$queue);
+
         return $length;
     }
-
 
     public function getFailedJobs($start = -100, $count = 100)
     {

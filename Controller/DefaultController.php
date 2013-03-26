@@ -4,7 +4,6 @@ namespace BCC\ResqueBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use BCC\ResqueBundle\Resque;
-use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {

@@ -7,7 +7,7 @@
     <parameters>
         <parameter key="bcc_resque.kernel.root_dir">%kernel.root_dir%</parameter>
     </parameters>
-    
+
     <services>
         <service id="bcc_resque.resque" class="%bcc_resque.resque.class%">
             <argument type="collection">
