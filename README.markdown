@@ -81,8 +81,9 @@ You may want to add some configuration to your `config.yml`
 ``` yml
 # app/config/config.yml
 bcc_resque:
-    class: BCC\ResqueBundle\Resque  # the resque class if different from default
+    class: BCC\ResqueBundle\Resque           # the resque class if different from default
     vendor_dir: %kernel.root_dir%/../vendor  # the vendor dir if different from default
+    prefix: my-resque-prefix                 # optional prefix to separate Resque data per site/app
     redis:
         host: localhost                      # the redis host
         port: 6379                           # the redis port
@@ -213,6 +214,8 @@ environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',V
 [group:myapp]
 programs=myapp_phpresque_default,myapp_phpresque_scheduledworker
 ```
+
+(If you use a custom Resque prefix, add an extra environment variable: PREFIX='my-resque-prefix')
 
 Then in Capifony you can do
 

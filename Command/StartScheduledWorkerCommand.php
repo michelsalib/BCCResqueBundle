@@ -40,6 +40,11 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             'RESQUE_PHP' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/lib/Resque.php',
         );
 
+        $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
+        if (!empty($prefix)) {
+            $env['PREFIX'] = $this->getContainer()->getParameter('bcc_resque.prefix');
+        }
+
         $redisHost = $this->getContainer()->getParameter('bcc_resque.resque.redis.host');
         $redisPort = $this->getContainer()->getParameter('bcc_resque.resque.redis.port');
         $redisDatabase = $this->getContainer()->getParameter('bcc_resque.resque.redis.database');
