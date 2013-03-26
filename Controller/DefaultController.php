@@ -4,17 +4,10 @@ namespace BCC\ResqueBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use BCC\ResqueBundle\Resque;
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-    /**
-     * @return \BCC\ResqueBundle\Resque
-     */
-    protected function getResque()
-    {
-        return $this->get('bcc_resque.resque');
-    }
-
     public function indexAction()
     {
         return $this->render('BCCResqueBundle:Default:index.html.twig', array(
@@ -22,17 +15,36 @@ class DefaultController extends Controller
         ));
     }
 
-    public function listQueuesAction()
+    public function showQueueAction($queue)
     {
-        return $this->render('BCCResqueBundle:Default:queue_list.html.twig', array(
-            'queues'  => $this->getResque()->getQueues(),
+        list($start, $count, $showingAll)=$this->getShowParameters();
+
+        $queue = $this->getResque()->getQueue($queue);
+        $jobs=$queue->getJobs($start, $count);
+
+        if(!$showingAll)
+        {
+            $jobs=array_reverse($jobs);
+        }
+
+        return $this->render('BCCResqueBundle:Default:queue_show.html.twig', array(
+                'queue'=> $queue,'jobs'=>$jobs,'showingAll'=>$showingAll
         ));
     }
 
     public function listFailedAction()
     {
+        list($start, $count, $showingAll)=$this->getShowParameters();
+
+        $jobs = $this->getResque()->getFailedJobs($start, $count);
+
+        if(!$showingAll)
+        {
+            $jobs=array_reverse($jobs);
+        }
+
         return $this->render('BCCResqueBundle:Default:failed_list.html.twig', array(
-            'failed'  => $this->getResque()->getFailedJobs(),
+            'jobs'  => $jobs,'showingAll'=>$showingAll,
         ));
     }
 
@@ -57,5 +69,34 @@ class DefaultController extends Controller
             'timestamp' => $timestamp,
             'jobs'      => $jobs
         ));
+    }
+
+    /**
+     * @return \BCC\ResqueBundle\Resque
+     */
+    protected function getResque()
+    {
+        return $this->get('bcc_resque.resque');
+    }
+
+    /**
+     * decide which parts of a job queue to show
+     *
+     * @return array
+     */
+    private function getShowParameters()
+    {
+        $showingAll=false;
+        $start=-100;
+        $count=-1;
+
+        if($this->getRequest()->query->has('all'))
+        {
+            $start=0;
+            $count=-1;
+            $showingAll=true;
+        }
+
+        return array($start, $count, $showingAll);
     }
 }

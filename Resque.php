@@ -111,6 +111,15 @@ class Resque
         }, \Resque::queues());
     }
 
+    /**
+     * @param $queue
+     * @return Queue
+     */
+    public function getQueue($queue)
+    {
+        return new Queue($queue);
+    }
+
     public function getWorkers()
     {
         return \array_map(function ($worker) {
@@ -189,11 +198,12 @@ class Resque
     }
 
 
-    public function getFailedJobs()
+    public function getFailedJobs($start = -100, $count = 100)
     {
-        $jobs = \Resque::redis()->lrange('failed', -100, 100);
+        $jobs = \Resque::redis()->lrange('failed', $start, $count);
 
         $result = array();
+
         foreach ($jobs as $job) {
             $result[] = new FailedJob(json_decode($job, true));
         }

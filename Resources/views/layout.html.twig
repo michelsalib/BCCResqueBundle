@@ -4,8 +4,13 @@
         <meta charset="UTF-8" />
         <title>{% block title %}BCC Resque{% endblock %}</title>
         {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('bundles/bccresque/css/bootstrap.min.css') }}" type="text/css" media="screen" />
+            <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
             <style type="text/css">
+                table.table td {
+                    word-break: break-all;
+                    word-wrap: break-word;
+                }
+
                 body {
                     padding-top: 60px;
                     padding-bottom: 40px;

@@ -1,0 +1,8 @@
+<p class="lead">Showing
+    {% if showingAll %}
+        all {{ jobs|length }} jobs in date order (<b>oldest first</b>)
+    {% else %}
+        {{ jobs|length }} most recent jobs (<b>newest first</b>)
+        - <a href="{{ app.request.uri }}?all=1">show all</a>
+    {% endif %}
+</p>

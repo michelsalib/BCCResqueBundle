@@ -21,9 +21,9 @@ class Queue
         return $this->name;
     }
 
-    public function getJobs()
+    public function getJobs($start=0, $stop=-1)
     {
-        $jobs = \Resque::redis()->lrange('queue:' . $this->name, -100, 100);
+        $jobs = \Resque::redis()->lrange('queue:' . $this->name, $start, $stop);
 
         $result = array();
         foreach ($jobs as $job) {
