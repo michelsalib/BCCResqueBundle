@@ -78,6 +78,7 @@ class Resque
         }
 
         \ResqueScheduler::enqueueAt($at, $job->queue, \get_class($job), $job->args);
+
         return null;
     }
 
@@ -88,6 +89,7 @@ class Resque
         }
 
         \ResqueScheduler::enqueueIn($in, $job->queue, \get_class($job), $job->args);
+
         return null;
     }
 
@@ -114,6 +116,15 @@ class Resque
         return \array_map(function ($queue) {
             return new Queue($queue);
         }, \Resque::queues());
+    }
+
+    /**
+     * @param $queue
+     * @return Queue
+     */
+    public function getQueue($queue)
+    {
+        return new Queue($queue);
     }
 
     public function getWorkers()
@@ -147,8 +158,7 @@ class Resque
 
         //TODO: find a more efficient way to do this
         $out=array();
-        foreach($timestamps as $timestamp)
-        {
+        foreach ($timestamps as $timestamp) {
             $out[]=array($timestamp,\Resque::redis()->llen('delayed:'.$timestamp));
         }
 
@@ -158,8 +168,7 @@ class Resque
     public function getFirstDelayedJobTimestamp()
     {
         $timestamps=$this->getDelayedJobTimestamps();
-        if(count($timestamps)>0)
-        {
+        if (count($timestamps)>0) {
             return $timestamps[0];
         }
 
@@ -175,10 +184,10 @@ class Resque
     {
         $jobs= \Resque::redis()->lrange('delayed:'.$timestamp,0, -1);
         $out=array();
-        foreach($jobs as $job)
-        {
+        foreach ($jobs as $job) {
             $out[]=json_decode($job, true);
         }
+
         return $out;
     }
 
@@ -190,15 +199,16 @@ class Resque
     {
         $length=\Resque::redis()->llen('queue:'.$queue);
         \Resque::redis()->del('queue:'.$queue);
+
         return $length;
     }
 
-
-    public function getFailedJobs()
+    public function getFailedJobs($start = -100, $count = 100)
     {
-        $jobs = \Resque::redis()->lrange('failed', -100, 100);
+        $jobs = \Resque::redis()->lrange('failed', $start, $count);
 
         $result = array();
+
         foreach ($jobs as $job) {
             $result[] = new FailedJob(json_decode($job, true));
         }

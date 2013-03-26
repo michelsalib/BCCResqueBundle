@@ -8,8 +8,8 @@
         <default key="_controller">BCCResqueBundle:Default:index</default>
     </route>
 
-    <route id="BCCResqueBundle_queue_list" pattern="/queue/list">
-        <default key="_controller">BCCResqueBundle:Default:listQueues</default>
+    <route id="BCCResqueBundle_queue_show" pattern="/queue/{queue}">
+        <default key="_controller">BCCResqueBundle:Default:showQueue</default>
     </route>
 
     <route id="BCCResqueBundle_failed_list" pattern="/failed/list">

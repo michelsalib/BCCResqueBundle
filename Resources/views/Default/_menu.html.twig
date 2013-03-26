@@ -1,0 +1,19 @@
+{% import _self as nav %}
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="{{ path('BCCResqueBundle_homepage') }}">BCC Resque</a>
+            <ul class="nav">
+                <li {{ nav.activeClass(activeNav,'homepage') }}><a href="{{ path('BCCResqueBundle_homepage') }}">Home</a></li>
+                <li {{ nav.activeClass(activeNav,'scheduled_list') }}><a href="{{ path('BCCResqueBundle_scheduled_list') }}">Scheduled</a></li>
+                <li {{ nav.activeClass(activeNav,'failed_list') }}><a href="{{ path('BCCResqueBundle_failed_list') }}">Failed</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% macro activeClass(activeNav,item) %}
+{% if activeNav == item %}
+class="active"
+{% endif %}
+{% endmacro %}
