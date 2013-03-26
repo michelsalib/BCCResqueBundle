@@ -29,6 +29,10 @@ class StartWorkerCommand extends ContainerAwareCommand
             'QUEUE'       => $input->getArgument('queues'),
             'VERBOSE'     => 1,
         );
+        $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
+        if (!empty($prefix)) {
+            $env['PREFIX'] = $this->getContainer()->getParameter('bcc_resque.prefix');
+        }
         if ($input->getOption('verbose')) {
             $env['VVERBOSE'] = 1;
         }

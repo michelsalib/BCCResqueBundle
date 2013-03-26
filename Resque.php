@@ -19,6 +19,11 @@ class Resque
         $this->kernelOptions = $kernelOptions;
     }
 
+    public function setPrefix($prefix)
+    {
+        \Resque_Redis::prefix($prefix);
+    }
+
     public function setRedisConfiguration($host, $port, $database)
     {
         $this->redisConfiguration = array(

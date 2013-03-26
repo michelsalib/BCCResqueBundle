@@ -6,6 +6,12 @@
 
     <parameters>
         <parameter key="bcc_resque.kernel.root_dir">%kernel.root_dir%</parameter>
+        <parameter key="bcc_resque.vendor_dir" />
+        <parameter key="bcc_resque.class" />
+        <parameter key="bcc_resque.prefix" />
+        <parameter key="bcc_resque.redis.host" />
+        <parameter key="bcc_resque.redis.port" />
+        <parameter key="bcc_resque.redis.database" />
     </parameters>
     
     <services>
