@@ -1,10 +1,10 @@
 {% extends 'BCCResqueBundle::layout.html.twig' %}
 {% block body %}
-{% include "BCCResqueBundle:default:_menu.html.twig" with {activeNav: 'failed_list'} %}
+{% include "BCCResqueBundle:Default:_menu.html.twig" with {activeNav: 'failed_list'} %}
 <div class="container">
     <div class="row span12">
         <h2>Failed Jobs</h2>
-        {% include "BCCResqueBundle:default:_miniPager.html.twig" %}
+        {% include "BCCResqueBundle:Default:_miniPager.html.twig" %}
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
