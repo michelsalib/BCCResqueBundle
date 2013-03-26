@@ -10,49 +10,62 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('BCCResqueBundle:Default:index.html.twig', array(
-            'resque'  => $this->getResque(),
-        ));
+        return $this->render(
+            'BCCResqueBundle:Default:index.html.twig',
+            array(
+                'resque' => $this->getResque(),
+            )
+        );
     }
 
     public function showQueueAction($queue)
     {
-        list($start, $count, $showingAll)=$this->getShowParameters();
+        list($start, $count, $showingAll) = $this->getShowParameters();
 
         $queue = $this->getResque()->getQueue($queue);
-        $jobs=$queue->getJobs($start, $count);
+        $jobs = $queue->getJobs($start, $count);
 
-        if(!$showingAll)
-        {
-            $jobs=array_reverse($jobs);
+        if (!$showingAll) {
+            $jobs = array_reverse($jobs);
         }
 
-        return $this->render('BCCResqueBundle:Default:queue_show.html.twig', array(
-                'queue'=> $queue,'jobs'=>$jobs,'showingAll'=>$showingAll
-        ));
+        return $this->render(
+            'BCCResqueBundle:Default:queue_show.html.twig',
+            array(
+                'queue' => $queue,
+                'jobs' => $jobs,
+                'showingAll' => $showingAll
+            )
+        );
     }
 
     public function listFailedAction()
     {
-        list($start, $count, $showingAll)=$this->getShowParameters();
+        list($start, $count, $showingAll) = $this->getShowParameters();
 
         $jobs = $this->getResque()->getFailedJobs($start, $count);
 
-        if(!$showingAll)
-        {
-            $jobs=array_reverse($jobs);
+        if (!$showingAll) {
+            $jobs = array_reverse($jobs);
         }
 
-        return $this->render('BCCResqueBundle:Default:failed_list.html.twig', array(
-            'jobs'  => $jobs,'showingAll'=>$showingAll,
-        ));
+        return $this->render(
+            'BCCResqueBundle:Default:failed_list.html.twig',
+            array(
+                'jobs' => $jobs,
+                'showingAll' => $showingAll,
+            )
+        );
     }
 
     public function listScheduledAction()
     {
-        return $this->render('BCCResqueBundle:Default:scheduled_list.html.twig', array(
-            'timestamps' => $this->getResque()->getDelayedJobTimestamps()
-        ));
+        return $this->render(
+            'BCCResqueBundle:Default:scheduled_list.html.twig',
+            array(
+                'timestamps' => $this->getResque()->getDelayedJobTimestamps()
+            )
+        );
     }
 
     public function showTimestampAction($timestamp)
@@ -60,15 +73,17 @@ class DefaultController extends Controller
         $jobs = array();
 
         // we don't want to enable the twig debug extension for this...
-        foreach($this->getResque()->getJobsForTimestamp($timestamp) as $job)
-        {
-            $jobs[]=print_r($job,true);
+        foreach ($this->getResque()->getJobsForTimestamp($timestamp) as $job) {
+            $jobs[] = print_r($job, true);
         }
 
-        return $this->render('BCCResqueBundle:Default:scheduled_timestamp.html.twig', array(
-            'timestamp' => $timestamp,
-            'jobs'      => $jobs
-        ));
+        return $this->render(
+            'BCCResqueBundle:Default:scheduled_timestamp.html.twig',
+            array(
+                'timestamp' => $timestamp,
+                'jobs' => $jobs
+            )
+        );
     }
 
     /**
@@ -86,15 +101,14 @@ class DefaultController extends Controller
      */
     private function getShowParameters()
     {
-        $showingAll=false;
-        $start=-100;
-        $count=-1;
+        $showingAll = false;
+        $start = -100;
+        $count = -1;
 
-        if($this->getRequest()->query->has('all'))
-        {
-            $start=0;
-            $count=-1;
-            $showingAll=true;
+        if ($this->getRequest()->query->has('all')) {
+            $start = 0;
+            $count = -1;
+            $showingAll = true;
         }
 
         return array($start, $count, $showingAll);
