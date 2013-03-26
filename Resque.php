@@ -188,4 +188,16 @@ class Resque
         return $length;
     }
 
+
+    public function getFailedJobs()
+    {
+        $jobs = \Resque::redis()->lrange('failed', -100, 100);
+
+        $result = array();
+        foreach ($jobs as $job) {
+            $result[] = new FailedJob(json_decode($job, true));
+        }
+
+        return $result;
+    }
 }

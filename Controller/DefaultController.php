@@ -7,42 +7,55 @@ use BCC\ResqueBundle\Resque;
 
 class DefaultController extends Controller
 {
+    /**
+     * @return \BCC\ResqueBundle\Resque
+     */
+    protected function getResque()
+    {
+        return $this->get('bcc_resque.resque');
+    }
+
     public function indexAction()
     {
         return $this->render('BCCResqueBundle:Default:index.html.twig', array(
-            'resque'  => $this->get('bcc_resque.resque'),
+            'resque'  => $this->getResque(),
         ));
     }
 
     public function listQueuesAction()
     {
-        $resque = $this->get('bcc_resque.resque');
-
         return $this->render('BCCResqueBundle:Default:queue_list.html.twig', array(
-            'queues'  => $resque->getQueues(),
+            'queues'  => $this->getResque()->getQueues(),
+        ));
+    }
+
+    public function listFailedAction()
+    {
+        return $this->render('BCCResqueBundle:Default:failed_list.html.twig', array(
+            'failed'  => $this->getResque()->getFailedJobs(),
         ));
     }
 
     public function listScheduledAction()
     {
-        /** @var $resque Resque */
-        $resque = $this->get('bcc_resque.resque');
-        $timestamps=$resque->getDelayedJobTimestamps();
-        return $this->render('BCCResqueBundle:Default:scheduled_list.html.twig',array('timestamps'=>$timestamps));
+        return $this->render('BCCResqueBundle:Default:scheduled_list.html.twig', array(
+            'timestamps' => $this->getResque()->getDelayedJobTimestamps()
+        ));
     }
 
     public function showTimestampAction($timestamp)
     {
-        /** @var $resque Resque */
-        $resque = $this->get('bcc_resque.resque');
+        $jobs = array();
 
-        $jobs=array();
         // we don't want to enable the twig debug extension for this...
-        foreach($resque->getJobsForTimestamp($timestamp) as $job)
+        foreach($this->getResque()->getJobsForTimestamp($timestamp) as $job)
         {
             $jobs[]=print_r($job,true);
         }
 
-        return $this->render('BCCResqueBundle:Default:scheduled_timestamp.html.twig',array('timestamp'=>$timestamp,'jobs'=>$jobs));
+        return $this->render('BCCResqueBundle:Default:scheduled_timestamp.html.twig', array(
+            'timestamp' => $timestamp,
+            'jobs'      => $jobs
+        ));
     }
 }
