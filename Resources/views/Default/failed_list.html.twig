@@ -18,7 +18,7 @@
                 {% for job in jobs %}
                 <tr>
                     <td class="span1">{{ job.queueName }}</td>
-                    <td class="span2">{{ job.failedAt|date('Y-m-d H:i:s') }}</td>
+                    <td class="span2">{{ job.failedAt }}</td>
                     <td class="span4">{{ job.name }}</td>
                     <td class="span5">
                         {{ job.exceptionClass }}<br>
