@@ -32,7 +32,7 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
         }
 
         $env = array(
-            'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/autoload.php',
+            'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.vendor_dir').'/autoload.php',
             'VVERBOSE'    => 1,
             'RESQUE_PHP' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/lib/Resque.php',
         );
@@ -42,9 +42,9 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             $env['PREFIX'] = $this->getContainer()->getParameter('bcc_resque.prefix');
         }
 
-        $redisHost = $this->getContainer()->getParameter('bcc_resque.resque.redis.host');
-        $redisPort = $this->getContainer()->getParameter('bcc_resque.resque.redis.port');
-        $redisDatabase = $this->getContainer()->getParameter('bcc_resque.resque.redis.database');
+        $redisHost = $this->getContainer()->getParameter('bcc_resque.redis.host');
+        $redisPort = $this->getContainer()->getParameter('bcc_resque.redis.port');
+        $redisDatabase = $this->getContainer()->getParameter('bcc_resque.redis.database');
         if ($redisHost != null && $redisPort != null) {
             $env['REDIS_BACKEND'] = $redisHost.':'.$redisPort;
         }

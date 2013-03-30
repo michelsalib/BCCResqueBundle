@@ -25,13 +25,13 @@ class StartWorkerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $env = array(
-            'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/autoload.php',
+            'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.vendor_dir').'/autoload.php',
             'QUEUE'       => $input->getArgument('queues'),
             'VERBOSE'     => 1,
         );
         $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
         if (!empty($prefix)) {
-            $env['PREFIX'] = $this->getContainer()->getParameter('bcc_resque.prefix');
+            $env['PREFIX'] = $prefix;
         }
         if ($input->getOption('verbose')) {
             $env['VVERBOSE'] = 1;
@@ -40,9 +40,9 @@ class StartWorkerCommand extends ContainerAwareCommand
             unset($env['VERBOSE']);
         }
 
-        $redisHost = $this->getContainer()->getParameter('bcc_resque.resque.redis.host');
-        $redisPort = $this->getContainer()->getParameter('bcc_resque.resque.redis.port');
-        $redisDatabase = $this->getContainer()->getParameter('bcc_resque.resque.redis.database');
+        $redisHost = $this->getContainer()->getParameter('bcc_resque.redis.host');
+        $redisPort = $this->getContainer()->getParameter('bcc_resque.redis.port');
+        $redisDatabase = $this->getContainer()->getParameter('bcc_resque.redis.database');
         if ($redisHost != null && $redisPort != null) {
             $env['REDIS_BACKEND'] = $redisHost.':'.$redisPort;
         }
@@ -56,7 +56,7 @@ class StartWorkerCommand extends ContainerAwareCommand
         }
         $workerCommand = strtr('php %opt% %dir%/chrisboulton/php-resque/resque.php', array(
             '%opt%' => $opt,
-            '%dir%' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir'),
+            '%dir%' => $this->getContainer()->getParameter('bcc_resque.vendor_dir'),
         ));
 
         if (!$input->getOption('foreground')) {
