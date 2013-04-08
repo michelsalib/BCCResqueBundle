@@ -17,6 +17,8 @@ class StartWorkerCommand extends ContainerAwareCommand
             ->setName('bcc:resque:worker-start')
             ->setDescription('Start a bcc resque worker')
             ->addArgument('queues', InputArgument::REQUIRED, 'Queue names (separate using comma)')
+            ->addOption('count', 'c', InputOption::VALUE_REQUIRED, 'How many workers to fork', 1)
+            ->addOption('interval', 'i', InputOption::VALUE_REQUIRED, 'How often to check for new jobs across the queues', 5)
             ->addOption('foreground', 'f', InputOption::VALUE_NONE, 'Should the worker run in foreground')
             ->addOption('memory-limit', 'm', InputOption::VALUE_REQUIRED, 'Force cli memory_limit (expressed in Mbytes)')
         ;
@@ -28,6 +30,8 @@ class StartWorkerCommand extends ContainerAwareCommand
             'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/autoload.php',
             'QUEUE'       => $input->getArgument('queues'),
             'VERBOSE'     => 1,
+            'COUNT'       => $input->getOption('count'),
+            'INTERVAL'    => $input->getOption('interval'),
         );
         $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
         if (!empty($prefix)) {
