@@ -61,7 +61,7 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             $workerCommand = 'nohup ' . $workerCommand . ' > ' . $logFile .' 2>&1 & echo $!';
         }
 
-        $process = new Process($workerCommand, null, $env);
+        $process = new Process($workerCommand, null, $env, null, null);
 
         $output->writeln(\sprintf('Starting worker <info>%s</info>', $process->getCommandLine()));
 
