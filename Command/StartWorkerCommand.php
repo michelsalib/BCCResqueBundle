@@ -27,7 +27,7 @@ class StartWorkerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $env = array(
-            'APP_INCLUDE' => $this->getContainer()->getParameter('kernel.root_dir').'/autoload.php',
+            'APP_INCLUDE' => $this->getContainer()->getParameter('kernel.root_dir').'/bootstrap.php.cache',
             'QUEUE'       => $input->getArgument('queues'),
             'VERBOSE'     => 1,
             'COUNT'       => $input->getOption('count'),
