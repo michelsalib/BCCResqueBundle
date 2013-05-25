@@ -69,6 +69,19 @@ class StartWorkerCommand extends ContainerAwareCommand
                 '%logs_dir%' => $this->getContainer()->getParameter('kernel.logs_dir'),
             ));
         }
+		
+		
+		// In windows: When you pass an environment to CMD it replaces the old environment
+		// That means we create a lot of problems with respect to user accounts and missing vars
+		// this is a workaround where we add the vars to the existing environment. 
+		if (defined('PHP_WINDOWS_VERSION_BUILD'))
+		{
+			foreach($env as $key => $value)
+			{
+				putenv($key."=". $value);
+			}
+			$env = null;
+		}
 
         $process = new Process($workerCommand, null, $env, null, null);
 
