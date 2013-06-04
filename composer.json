@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "<=2.2.x-dev",
+        "symfony/framework-bundle": ">=2.0,<3.0",
         "chrisboulton/php-resque": "1.2",
         "chrisboulton/php-resque-scheduler": "1.1"
     },
