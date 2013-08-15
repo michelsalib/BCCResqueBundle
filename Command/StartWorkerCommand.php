@@ -58,9 +58,10 @@ class StartWorkerCommand extends ContainerAwareCommand
         if (0 !== $m = (int) $input->getOption('memory-limit')) {
             $opt = sprintf('-d memory_limit=%dM', $m);
         }
-        $workerCommand = strtr('php %opt% %dir%/chrisboulton/php-resque/resque.php', array(
+
+        $workerCommand = strtr('php %opt% %dir%/resque', array(
             '%opt%' => $opt,
-            '%dir%' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir'),
+            '%dir%' => __DIR__.'/../bin',
         ));
 
         if (!$input->getOption('foreground')) {
@@ -69,11 +70,11 @@ class StartWorkerCommand extends ContainerAwareCommand
                 '%logs_dir%' => $this->getContainer()->getParameter('kernel.logs_dir'),
             ));
         }
-		
-		
+
+
 		// In windows: When you pass an environment to CMD it replaces the old environment
 		// That means we create a lot of problems with respect to user accounts and missing vars
-		// this is a workaround where we add the vars to the existing environment. 
+		// this is a workaround where we add the vars to the existing environment.
 		if (defined('PHP_WINDOWS_VERSION_BUILD'))
 		{
 			foreach($env as $key => $value)

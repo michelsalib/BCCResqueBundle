@@ -52,7 +52,7 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             $env['REDIS_BACKEND_DB'] = $redisDatabase;
         }
 
-        $workerCommand = 'php '.$this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque-scheduler/resque-scheduler.php';
+        $workerCommand = 'php '.__DIR__.'/../bin/resque-scheduler';
 
         if (!$input->getOption('foreground')) {
             $logFile = $this->getContainer()->getParameter(
@@ -63,7 +63,7 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
 
 		// In windows: When you pass an environment to CMD it replaces the old environment
 		// That means we create a lot of problems with respect to user accounts and missing vars
-		// this is a workaround where we add the vars to the existing environment. 
+		// this is a workaround where we add the vars to the existing environment.
 		if (defined('PHP_WINDOWS_VERSION_BUILD'))
 		{
 			foreach($env as $key => $value)
