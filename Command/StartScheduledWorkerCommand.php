@@ -17,6 +17,7 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             ->setDescription('Start a bcc scheduled resque worker')
             ->addOption('foreground', 'f', InputOption::VALUE_NONE, 'Should the worker run in foreground')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Force creation of a new worker if the PID file exists')
+            ->addOption('interval', 'i', InputOption::VALUE_REQUIRED, 'How often to check for new jobs across the queues', 5)
         ;
     }
 
@@ -34,7 +35,8 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
         $env = array(
             'APP_INCLUDE' => $this->getContainer()->getParameter('kernel.root_dir').'/bootstrap.php.cache',
             'VVERBOSE'    => 1,
-            'RESQUE_PHP' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/lib/Resque.php',
+            'RESQUE_PHP'  => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/lib/Resque.php',
+            'INTERVAL'    => $input->getOption('interval'),
         );
 
         $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
