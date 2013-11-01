@@ -52,7 +52,16 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             $env['REDIS_BACKEND_DB'] = $redisDatabase;
         }
 
-        $workerCommand = 'php '.__DIR__.'/../bin/resque-scheduler';
+        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+            $phpExecutable = PHP_BINARY;
+        } else {
+            $phpExecutable = PHP_BINDIR.'/php';
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                $phpExecutable = 'php';
+            }
+        }
+
+        $workerCommand = $phpExecutable.' '.__DIR__.'/../bin/resque-scheduler';
 
         if (!$input->getOption('foreground')) {
             $logFile = $this->getContainer()->getParameter(

@@ -59,7 +59,17 @@ class StartWorkerCommand extends ContainerAwareCommand
             $opt = sprintf('-d memory_limit=%dM', $m);
         }
 
-        $workerCommand = strtr('php %opt% %dir%/resque', array(
+        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+            $phpExecutable = PHP_BINARY;
+        } else {
+            $phpExecutable = PHP_BINDIR.'/php';
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                $phpExecutable = 'php';
+            }
+        }
+
+        $workerCommand = strtr('%php% %opt% %dir%/resque', array(
+            '%php%' => $phpExecutable,
             '%opt%' => $opt,
             '%dir%' => __DIR__.'/../bin',
         ));
