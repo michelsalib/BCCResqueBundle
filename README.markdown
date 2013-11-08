@@ -35,7 +35,7 @@ Add to your `bcc-resque-bundle` to your dependencies:
 {
     "require": {
         ...
-        "bcc/resque-bundle": "1.1"
+        "bcc/resque-bundle": "1.1.*"
     }
     ...
 }
