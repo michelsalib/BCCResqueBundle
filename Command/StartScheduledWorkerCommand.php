@@ -17,6 +17,7 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             ->setDescription('Start a bcc scheduled resque worker')
             ->addOption('foreground', 'f', InputOption::VALUE_NONE, 'Should the worker run in foreground')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Force creation of a new worker if the PID file exists')
+            ->addOption('interval', 'i', InputOption::VALUE_REQUIRED, 'How often to check for new jobs across the queues', 5)
         ;
     }
 
@@ -34,7 +35,8 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
         $env = array(
             'APP_INCLUDE' => $this->getContainer()->getParameter('kernel.root_dir').'/bootstrap.php.cache',
             'VVERBOSE'    => 1,
-            'RESQUE_PHP' => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/lib/Resque.php',
+            'RESQUE_PHP'  => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/lib/Resque.php',
+            'INTERVAL'    => $input->getOption('interval'),
         );
 
         $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
@@ -52,7 +54,16 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             $env['REDIS_BACKEND_DB'] = $redisDatabase;
         }
 
-        $workerCommand = 'php '.$this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque-scheduler/resque-scheduler.php';
+        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+            $phpExecutable = PHP_BINARY;
+        } else {
+            $phpExecutable = PHP_BINDIR.'/php';
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                $phpExecutable = 'php';
+            }
+        }
+
+        $workerCommand = $phpExecutable.' '.__DIR__.'/../bin/resque-scheduler';
 
         if (!$input->getOption('foreground')) {
             $logFile = $this->getContainer()->getParameter(
@@ -63,7 +74,7 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
 
 		// In windows: When you pass an environment to CMD it replaces the old environment
 		// That means we create a lot of problems with respect to user accounts and missing vars
-		// this is a workaround where we add the vars to the existing environment. 
+		// this is a workaround where we add the vars to the existing environment.
 		if (defined('PHP_WINDOWS_VERSION_BUILD'))
 		{
 			foreach($env as $key => $value)
