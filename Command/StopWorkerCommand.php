@@ -26,7 +26,10 @@ class StopWorkerCommand extends ContainerAwareCommand
         $resque = $this->getContainer()->get('bcc_resque.resque');
 
         if ($input->getOption('all')) {
-            $workers = $resque->getWorkers();
+            $workers = $resque->getWorkers(true);
+            if (empty($workers)) {
+                $output->writeln('<comment>You don\'t have any workers on this machine.</comment>');
+            }
         } else {
             $worker = $resque->getWorker($input->getArgument('id'));
 

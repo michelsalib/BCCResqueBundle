@@ -127,11 +127,25 @@ class Resque
         return new Queue($queue);
     }
 
-    public function getWorkers()
+    public function getWorkers($local = false)
     {
+        $workers = \Resque_Worker::all();
+
+        if ($local) {
+            $hostname = php_uname('n');
+            
+            if(function_exists('gethostname')) {
+                $hostname = gethostname();
+            }
+
+            $workers = \array_filter($workers, function ($worker) use ($hostname) {
+                return strpos((string) $worker, $hostname . ':') === 0;
+            });
+        }
+
         return \array_map(function ($worker) {
             return new Worker($worker);
-        }, \Resque_Worker::all());
+        }, $workers);
     }
 
     public function getWorker($id)
