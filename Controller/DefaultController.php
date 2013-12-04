@@ -3,7 +3,6 @@
 namespace BCC\ResqueBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use BCC\ResqueBundle\Resque;
 
 class DefaultController extends Controller
 {
