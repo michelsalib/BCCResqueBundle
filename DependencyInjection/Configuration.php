@@ -38,7 +38,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
 
                 ->arrayNode('auto_retry')
-                    ->useAttributeAsKey('alias', false)
                     ->beforeNormalization()
                         ->ifArray()
                         ->then(function ($var) {
@@ -51,6 +50,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->prototype('scalar')->end()
                     ->end()
+                    ->info('Set auto retry strategy')
                 ->end()
 
                 ->arrayNode('redis')
