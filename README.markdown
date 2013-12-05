@@ -202,12 +202,12 @@ Here's a sample conf file
 
 ```ini
 [program:myapp_phpresque_default]
-command = /usr/bin/php /home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/resque.php
+command = /usr/bin/php /home/sites/myapp/prod/current/vendor/bcc/resque-bundle/BCC/ResqueBundle/bin/resque
 user = myusername
 environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',QUEUE='default'
 
 [program:myapp_phpresque_scheduledworker]
-command = /usr/bin/php /home/sites/myapp/prod/current/vendor/chrisboulton/php-resque-scheduler/resque-scheduler.php
+command = /usr/bin/php /home/sites/myapp/prod/current/vendor/bcc/resque-bundle/BCC/ResqueBundle/bin/resque-scheduler
 user = myusername
 environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',RESQUE_PHP='/home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/lib/Resque.php'
 
