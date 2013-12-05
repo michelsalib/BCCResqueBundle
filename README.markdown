@@ -74,6 +74,19 @@ You can customize the prefix as you wish.
 
 You can now acces the dashboard at this url: `/resque`
 
+### Optional, secure the dashboard behind a role
+
+
+Add to your `security.yml`:
+
+``` yml
+# app/config/security.yml
+access_control:
+    - { path: ^/resque, roles: ROLE_ADMIN }
+```
+
+Now only users with the role ROLE_ADMIN will be able to access the dashboard at this url: `/resque`
+
 ### Optional, set configuration
 
 You may want to add some configuration to your `config.yml`
@@ -257,7 +270,7 @@ Or from outside the job:
 
 // create your job
 $job = new MyJob();
-$job->job = 'my_queue';
+$job->queue = 'my_queue';
 ```
 
 ### Access the container from inside your job
