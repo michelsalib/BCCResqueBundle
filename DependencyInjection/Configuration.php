@@ -36,7 +36,6 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->info('Set the resque class dir')
                 ->end()
-
                 ->arrayNode('auto_retry')
                     ->beforeNormalization()
                         ->ifArray()
@@ -52,7 +51,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->info('Set auto retry strategy')
                 ->end()
-
                 ->arrayNode('redis')
                     ->info('Redis configuration')
                     ->addDefaultsIfNotSet()

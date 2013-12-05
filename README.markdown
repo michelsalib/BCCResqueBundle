@@ -331,7 +331,7 @@ With default strategy for all but specific jobs:
 
 ```yml
 bcc_resque:
-    auto_retry: 
+    auto_retry:
     	default:        [0, 10, 60]
         Some\Job:       [0, 10, 120, 240]
         Some\Other\Job: [10, 30, 120, 600]
@@ -343,7 +343,7 @@ You can disable `auto_retry` for selected jobs by using an empty array:
 
 ```yml
 bcc_resque:
-    auto_retry: 
+    auto_retry:
     	default:        [0, 10, 60]
         Some\Job:       []
         Some\Other\Job: [10, 30, 120, 600]
@@ -351,8 +351,8 @@ bcc_resque:
 
 Here `Some\Job` will not have any `auto_retry` attached.
 
-**Please note** 
+**Please note**
 
-To use the `auto_retry` feature, you must also run the scheduler job: 
+To use the `auto_retry` feature, you must also run the scheduler job:
 
 `app/console bcc:resque:scheduledworker-start`
