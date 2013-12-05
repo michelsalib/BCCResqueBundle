@@ -47,7 +47,6 @@ if ($APP_INCLUDE) {
   require_once $APP_INCLUDE;
 }
 
-
 $PREFIX = getenv('PREFIX');
 if(!empty($PREFIX)) {
     fwrite(STDOUT, '*** Prefix set to '.$PREFIX."\n");
