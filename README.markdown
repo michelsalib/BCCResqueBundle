@@ -1,14 +1,15 @@
-# Intro to BCC Resque Bundle
+# Intro to BCCResqueBundle
 
-The BCC resque bundle provides integration of php-resque to Symfony2. It is inspired from resque, a Redis-backed Ruby library for creating background jobs, placing them on multiple queues, and processing them later.
+The BCC resque bundle provides integration of [php-resque](https://github.com/chrisboulton/php-resque/) to Symfony2. It is inspired from resque, a Redis-backed Ruby library for creating background jobs, placing them on multiple queues, and processing them later.
 
 ## Features:
 
 - Creating a Job, with container access in order to leverage your Symfony services
-- Enqueue a Job wih parameters on a given queue
+- Enqueue a Job with parameters on a given queue
 - Creating background worker on a given queue
 - A UX to monitor your queues, workers and job statuses
 - ability to schedule jobs to run at a specific time or after a number of seconds delay
+- ability to auto re-queue failed jobs, with back-off strategies
 
 TODOs:
 - Log management
@@ -35,7 +36,7 @@ Add to your `bcc-resque-bundle` to your dependencies:
 {
     "require": {
         ...
-        "bcc/resque-bundle": "1.1.*"
+        "bcc/resque-bundle": "dev-master"
     }
     ...
 }
@@ -72,7 +73,14 @@ BCCResqueBundle:
 
 You can customize the prefix as you wish.
 
-You can now acces the dashboard at this url: `/resque`
+You can now access the dashboard at this url: `/resque`
+
+To secure the dashboard, you can add the following to your `security.yml` - provided your administrator role is `ROLE_ADMIN`
+
+```yml
+    access_control:
+        - { path: ^/resque, roles: ROLE_ADMIN }
+```
 
 ### Optional, secure the dashboard behind a role
 
@@ -101,7 +109,11 @@ bcc_resque:
         host: localhost                      # the redis host
         port: 6379                           # the redis port
         database: 1                          # the redis database
+    auto_retry: [0, 10, 60]                  # auto retry failed jobs
 ```
+
+See the [Auto retry](#auto-retry) section for more on how to use `auto_retry`.
+
 
 ## Creating a Job
 
@@ -301,3 +313,59 @@ Use the `app/console bcc:resque:worker-stop` command.
 - No argument will display running workers that you can stop.
 - Add a worker id to stop it: `app/console bcc:resque:worker-stop ubuntu:3949:default`
 - Add the `--all` option to stop all the workers.
+
+
+### Auto retry
+
+You can have the bundle auto retry failed jobs by adding `retry strategy` for either a specific job, or for all jobs in general:
+
+The following will allow `Some\Job` to retry 3 times.
+
+* right away
+* after a 10 second delay
+* after a 30 second delay
+
+```yml
+bcc_resque:
+    redis:
+        ....
+    auto_retry:
+        Some\Job: [0, 10, 60]
+```
+
+Setting strategy for all jobs:
+
+```yml
+bcc_resque:
+    auto_retry: [0, 10, 60]
+```
+
+With default strategy for all but specific jobs:
+
+```yml
+bcc_resque:
+    auto_retry:
+    	default:        [0, 10, 60]
+        Some\Job:       [0, 10, 120, 240]
+        Some\Other\Job: [10, 30, 120, 600]
+```
+
+The `default` strategy (if provided) will be applied to all jobs that does not have a specific strategy attached. If not provided these jobs will not have auto retry.
+
+You can disable `auto_retry` for selected jobs by using an empty array:
+
+```yml
+bcc_resque:
+    auto_retry:
+    	default:        [0, 10, 60]
+        Some\Job:       []
+        Some\Other\Job: [10, 30, 120, 600]
+```
+
+Here `Some\Job` will not have any `auto_retry` attached.
+
+**Please note**
+
+To use the `auto_retry` feature, you must also run the scheduler job:
+
+`app/console bcc:resque:scheduledworker-start`

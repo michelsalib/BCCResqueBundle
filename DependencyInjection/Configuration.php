@@ -36,6 +36,21 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->info('Set the resque class dir')
                 ->end()
+                ->arrayNode('auto_retry')
+                    ->beforeNormalization()
+                        ->ifArray()
+                        ->then(function ($var) {
+                            if (array_key_exists(0, $var)) {
+                                return array($var);
+                            }
+                            return $var;
+                        })
+                    ->end()
+                    ->prototype('array')
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->info('Set auto retry strategy')
+                ->end()
                 ->arrayNode('redis')
                     ->info('Redis configuration')
                     ->addDefaultsIfNotSet()
