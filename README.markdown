@@ -323,7 +323,7 @@ The following will allow `Some\Job` to retry 3 times.
 
 * right away
 * after a 10 second delay
-* after a 30 second delay
+* after a 60 second delay
 
 ```yml
 bcc_resque:
