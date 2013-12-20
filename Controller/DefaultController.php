@@ -8,6 +8,8 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
+        $this->getResque()->pruneDeadWorkers();
+        
         return $this->render(
             'BCCResqueBundle:Default:index.html.twig',
             array(

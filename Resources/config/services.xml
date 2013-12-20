@@ -26,7 +26,6 @@
                 <argument>%bcc_resque.resque.redis.port%</argument>
                 <argument>%bcc_resque.resque.redis.database%</argument>
             </call>
-            <call method="pruneDeadWorkers" />
         </service>
     </services>
 </container>
