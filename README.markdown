@@ -230,11 +230,13 @@ Here's a sample conf file
 command = /usr/bin/php /home/sites/myapp/prod/current/vendor/bcc/resque-bundle/BCC/ResqueBundle/bin/resque
 user = myusername
 environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',QUEUE='default'
+stopsignal=QUIT
 
 [program:myapp_phpresque_scheduledworker]
 command = /usr/bin/php /home/sites/myapp/prod/current/vendor/bcc/resque-bundle/BCC/ResqueBundle/bin/resque-scheduler
 user = myusername
 environment = APP_INCLUDE='/home/sites/myapp/prod/current/vendor/autoload.php',VERBOSE='1',RESQUE_PHP='/home/sites/myapp/prod/current/vendor/chrisboulton/php-resque/lib/Resque.php'
+stopsignal=QUIT
 
 [group:myapp]
 programs=myapp_phpresque_default,myapp_phpresque_scheduledworker
