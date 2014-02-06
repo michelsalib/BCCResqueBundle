@@ -114,6 +114,9 @@ bcc_resque:
 
 See the [Auto retry](#auto-retry) section for more on how to use `auto_retry`.
 
+### Optional, configure lazy loading
+
+This bundle is prepared for lazy loading in order to make a connection to redis only when its really used. Symfony2 supports that starting with 2.3. To make it work an additional step needs to be done. You need to install a proxy manager to your Symfony2 project. The full documentation for adding the proxy manager can be found in [Symfony2's Lazy Service documentation](http://symfony.com/doc/current/components/dependency_injection/lazy_services.html).
 
 ## Creating a Job
 
