@@ -85,7 +85,7 @@
                                         {% for argname, argvalue in job.args %}
                                             <li>
                                                 <span>{{ argname }}</span>
-                                                <em class="pull-right">{{ argvalue }}</em>
+                                                <em class="pull-right">{{ dump(argvalue) }}</em>
                                             </li>
                                         {% endfor %}
                                     </ul>
