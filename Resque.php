@@ -2,6 +2,8 @@
 
 namespace BCC\ResqueBundle;
 
+use Psr\Log\NullLogger;
+
 class Resque
 {
     /**
@@ -175,6 +177,7 @@ class Resque
     {
         // HACK, prune dead workers, just in case
         $worker = new \Resque_Worker('temp');
+        $worker->setLogger(new NullLogger());
         $worker->pruneDeadWorkers();
     }
 
