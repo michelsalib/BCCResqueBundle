@@ -71,6 +71,17 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('worker')
+                    ->info('Worker Server configuration')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('root_dir')
+                            ->defaultValue('%kernel.root_dir')
+                            ->cannotBeEmpty()
+                            ->info('The root dir of worker registered app')
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

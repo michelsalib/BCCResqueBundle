@@ -36,6 +36,10 @@ class BCCResqueExtension extends Extension
             $container->getDefinition('bcc_resque.resque')->addMethodCall('setPrefix', array($config['prefix']));
         }
 
+        if (!empty($config['worker']['root_dir'])) {
+            $container->setParameter('bcc_resque.worker.root_dir', $config['worker']['root_dir']);
+        }
+
         if (!empty($config['auto_retry'])) {
             if (isset($config['auto_retry'][0])) {
                 $container->getDefinition('bcc_resque.resque')->addMethodCall('setGlobalRetryStrategy', array($config['auto_retry'][0]));
