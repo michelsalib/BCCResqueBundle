@@ -76,7 +76,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('root_dir')
-                            ->defaultValue('%kernel.root_dir')
+                            ->defaultValue('%kernel.root_dir%')
                             ->cannotBeEmpty()
                             ->info('The root dir of worker registered app')
                         ->end()
