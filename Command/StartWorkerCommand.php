@@ -96,13 +96,12 @@ class StartWorkerCommand extends ContainerAwareCommand
         ));
 
         if (!$input->getOption('foreground')) {
-            $workerCommand = strtr('%nohup%%cmd% > %logs_dir%/resque.log 2>&1 & echo $!', array(
-                '%nohup%'    => self::commandExists('nohup') ? 'nohup ' : '',
+            $workerCommand = strtr('%nohup% %cmd% > %logs_dir%/resque.log 2>&1 & echo $!', array(
+                '%nohup%'    => self::commandExists('nohup') ? 'nohup' : 'disown',
                 '%cmd%'      => $workerCommand,
                 '%logs_dir%' => $this->getContainer()->getParameter('kernel.logs_dir'),
             ));
         }
-
 
 		// In windows: When you pass an environment to CMD it replaces the old environment
 		// That means we create a lot of problems with respect to user accounts and missing vars
@@ -117,7 +116,7 @@ class StartWorkerCommand extends ContainerAwareCommand
         $process = new Process($workerCommand, null, $env, null, null);
 
         if (!$input->getOption('quiet')) {
-            $output->writeln(\sprintf('Starting worker <info>%s</info>', $process->getCommandLine()));
+            $output->writeln(sprintf('Starting worker <info>%s</info>', $process->getCommandLine()));
         }
 
         // if foreground, we redirect output
@@ -125,11 +124,10 @@ class StartWorkerCommand extends ContainerAwareCommand
             $process->run(function ($type, $buffer) use ($output) {
                 $output->write($buffer);
             });
-        }
-        // else we recompose and display the worker id
-        else {
+        } else {
+            // else we recompose and display the worker id
             $process->run();
-            $pid = \trim($process->getOutput());
+            $pid = trim($process->getOutput());
 
             if (function_exists('gethostname')) {
                 $hostname = gethostname();
@@ -138,7 +136,7 @@ class StartWorkerCommand extends ContainerAwareCommand
             }
 
             if (!$input->getOption('quiet')) {
-                $output->writeln(\sprintf('<info>Worker started</info> %s:%s:%s', $hostname, $pid, $input->getArgument('queues')));
+                $output->writeln(sprintf('<info>Worker started</info> %s:%s:%s', $hostname, $pid, $input->getArgument('queues')));
             }
         }
     }
