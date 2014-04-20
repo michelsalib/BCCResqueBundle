@@ -9,14 +9,18 @@ if (!empty($RESQUE_PHP)) {
   require_once $RESQUE_PHP;
 }
 
-$REDIS_BACKEND = getenv('REDIS_BACKEND');
-$REDIS_BACKEND_DB = getenv('REDIS_BACKEND_DB');
+$REDIS_BACKEND          = getenv('REDIS_BACKEND');
+$REDIS_BACKEND_DB       = getenv('REDIS_BACKEND_DB');
+$REDIS_BACKEND_PASSWORD = getenv('REDIS_BACKEND_PASSWORD');
 if (!empty($REDIS_BACKEND)) {
     if (empty($REDIS_BACKEND_DB)) {
         Resque::setBackend($REDIS_BACKEND);
     } else {
         Resque::setBackend($REDIS_BACKEND, $REDIS_BACKEND_DB);
     }
+}
+if (!empty($REDIS_BACKEND_PASSWORD)) {
+    Resque::redis()->auth($REDIS_BACKEND_PASSWORD);
 }
 
 // Set log level for resque-scheduler

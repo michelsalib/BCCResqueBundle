@@ -12,6 +12,7 @@
         <parameter key="bcc_resque.redis.host" />
         <parameter key="bcc_resque.redis.port" />
         <parameter key="bcc_resque.redis.database" />
+        <parameter key="bcc_resque.redis.password" />
     </parameters>
 
     <services>
@@ -25,6 +26,7 @@
                 <argument>%bcc_resque.resque.redis.host%</argument>
                 <argument>%bcc_resque.resque.redis.port%</argument>
                 <argument>%bcc_resque.resque.redis.database%</argument>
+                <argument>%bcc_resque.resque.redis.password%</argument>
             </call>
         </service>
     </services>
