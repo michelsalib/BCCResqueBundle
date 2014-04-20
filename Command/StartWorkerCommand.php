@@ -96,7 +96,8 @@ class StartWorkerCommand extends ContainerAwareCommand
         ));
 
         if (!$input->getOption('foreground')) {
-            $workerCommand = strtr('nohup %cmd% > %logs_dir%/resque.log 2>&1 & echo $!', array(
+            $workerCommand = strtr('%nohup%%cmd% > %logs_dir%/resque.log 2>&1 & echo $!', array(
+                '%nohup%'    => self::commandExists('nohup') ? 'nohup ' : '',
                 '%cmd%'      => $workerCommand,
                 '%logs_dir%' => $this->getContainer()->getParameter('kernel.logs_dir'),
             ));
@@ -141,4 +142,11 @@ class StartWorkerCommand extends ContainerAwareCommand
             }
         }
     }
+
+    private static function commandExists($cmd)
+    {
+        $returnVal = shell_exec("which $cmd");
+        
+        return empty($returnVal);
+    }    
 }

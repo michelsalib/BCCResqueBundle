@@ -42,11 +42,14 @@ class Resque
             'host'     => $host,
             'port'     => $port,
             'database' => $database,
+            'password' => $password
         );
 
-        \Resque::setBackend($host.':'.$port, $database);
-
-        if (isset($password)) {
+        if (!isset($password)) {
+            \Resque::setBackend($host.':'.$port, $database);
+        } else {
+            $server = 'redis://:' . $password . '@' . $host . ':' . $port;
+            \Resque::setBackend($server, $database);
             \Resque::redis()->auth($password);
         }
     }
