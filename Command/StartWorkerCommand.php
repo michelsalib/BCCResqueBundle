@@ -59,6 +59,10 @@ class StartWorkerCommand extends ContainerAwareCommand
         if ($input->getOption('quiet')) {
             unset($env['VERBOSE']);
         }
+        
+        if ($input->getOption('env')) {
+	    $env['SYMFONY_ENV'] = $input->getOption('env');
+        }
 
         $redisHost     = $this->getContainer()->getParameter('bcc_resque.resque.redis.host');
         $redisPort     = $this->getContainer()->getParameter('bcc_resque.resque.redis.port');
