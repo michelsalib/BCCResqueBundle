@@ -44,8 +44,15 @@ abstract class ContainerAwareJob extends Job
 
         require_once $file;
 
+         $env = 'dev';
+         if (isset($this->args['kernel.environment'])) {
+            $env = $this->args['kernel.environment'];
+         } elseif (getenv('SYMFONY_ENV')) {
+            $env = getenv('SYMFONY_ENV');
+         }
+
         return new $class(
-            isset($this->args['kernel.environment']) ? $this->args['kernel.environment'] : 'dev',
+            $env,
             isset($this->args['kernel.debug']) ? $this->args['kernel.debug'] : true
         );
     }
