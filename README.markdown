@@ -110,9 +110,14 @@ bcc_resque:
         port: 6379                           # the redis port
         database: 1                          # the redis database
     auto_retry: [0, 10, 60]                  # auto retry failed jobs
+    worker:
+        root_dir: path/to/worker/root        # the root dir of app that run workers (optional)
 ```
 
 See the [Auto retry](#auto-retry) section for more on how to use `auto_retry`.
+
+Set `worker: root_dir:` in case job fails to run when worker systems are hosted on separate server/dir from the system creating the queue.
+When running multiple configured apps for multiple workers, all apps must be able to access by the same root_dir defined in `worker: root_dir`.
 
 ### Optional, configure lazy loading
 
