@@ -126,6 +126,8 @@ class Resque
         if ($job instanceof ContainerAwareJob) {
             $job->setKernelOptions($this->kernelOptions);
         }
+        
+        $this->attachRetryStrategy($job);
 
         return \ResqueScheduler::removeDelayed($job->queue, \get_class($job),$job->args);
     }
@@ -135,6 +137,8 @@ class Resque
         if ($job instanceof ContainerAwareJob) {
             $job->setKernelOptions($this->kernelOptions);
         }
+        
+        $this->attachRetryStrategy($job);
 
         return \ResqueScheduler::removeDelayedJobFromTimestamp($at, $job->queue, \get_class($job), $job->args);
     }
