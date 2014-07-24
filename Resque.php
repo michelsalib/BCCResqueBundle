@@ -86,7 +86,7 @@ class Resque
 
         foreach ($jobs AS $j) {
             if ($j->job->payload['class'] == get_class($job)) {
-                if (count(array_intersect($j->args, $job->args)) == count($job->args)) {
+                if (count(self::recArrInterKey($j->args, $job->args)) == count($job->args)) {
                     return ($trackStatus) ? $j->job->payload['id'] : null;
                 }
             }
@@ -266,5 +266,22 @@ class Resque
         } elseif (count($this->globalRetryStrategy)) {
             $job->args['bcc_resque.retry_strategy'] = $this->globalRetryStrategy;
         }
+    }
+    
+    /**
+     * Intersect of recursive arrays
+     * needed for enqueueOnce
+     */ 
+    protected static function recArrInterKey(array $array1, array $array2)
+    {
+        $array1 = array_intersect_key($array1, $array2);
+        foreach ($array1 as $key => &$value)
+        {
+            if (is_array($value))
+            {
+                $value = is_array($array2[$key]) ? self::recArrInterKey($value, $array2[$key]) : $value;
+            }
+        }
+        return $array1;
     }
 }
