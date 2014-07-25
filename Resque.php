@@ -86,7 +86,7 @@ class Resque
 
         foreach ($jobs AS $j) {
             if ($j->job->payload['class'] == get_class($job)) {
-                if (count(self::recArrInterKey($j->args, $job->args)) == count($job->args)) {
+                if (count(self::array_diff_assoc_recursive($j->args, $job->args)) > 0) {
                     return ($trackStatus) ? $j->job->payload['id'] : null;
                 }
             }
@@ -272,16 +272,21 @@ class Resque
      * Intersect of recursive arrays
      * needed for enqueueOnce
      */ 
-    protected static function recArrInterKey(array $array1, array $array2)
-    {
-        $array1 = array_intersect_key($array1, $array2);
-        foreach ($array1 as $key => &$value)
-        {
-            if (is_array($value))
-            {
-                $value = is_array($array2[$key]) ? self::recArrInterKey($value, $array2[$key]) : $value;
+    protected static function array_diff_assoc_recursive($array1, $array2) {
+    $difference=array();
+    foreach($array1 as $key => $value) {
+        if( is_array($value) ) {
+            if( !isset($array2[$key]) || !is_array($array2[$key]) ) {
+                $difference[$key] = $value;
+            } else {
+                $new_diff = array_diff_assoc_recursive($value, $array2[$key]);
+                if( !empty($new_diff) )
+                    $difference[$key] = $new_diff;
             }
+        } else if( !array_key_exists($key,$array2) || $array2[$key] !== $value ) {
+            $difference[$key] = $value;
         }
-        return $array1;
     }
+    return $difference;
+}
 }
