@@ -43,6 +43,7 @@ class Resque
             'port'     => $port,
             'database' => $database,
         );
+        $host = substr($host, 0, 1) == '/' ? $host : $host.':'.$port;
 
         \Resque::setBackend($host.':'.$port, $database);
     }
