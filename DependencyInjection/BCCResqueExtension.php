@@ -26,6 +26,7 @@ class BCCResqueExtension extends Extension
         $loader->load('services.xml');
 
         $container->setParameter('bcc_resque.resque.vendor_dir', $config['vendor_dir']);
+        $container->setParameter('bcc_resque.resque.app_include', $config['app_include']);
         $container->setParameter('bcc_resque.resque.class', $config['class']);
         $container->setParameter('bcc_resque.resque.redis.host', $config['redis']['host']);
         $container->setParameter('bcc_resque.resque.redis.port', $config['redis']['port']);

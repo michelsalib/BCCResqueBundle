@@ -33,11 +33,14 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
         }
 
         $env = array(
-            'APP_INCLUDE' => $this->getContainer()->getParameter('kernel.root_dir').'/bootstrap.php.cache',
+            'APP_INCLUDE' => $this->getContainer()->getParameter('bcc_resque.resque.app_include'),
             'VVERBOSE'    => 1,
             'RESQUE_PHP'  => $this->getContainer()->getParameter('bcc_resque.resque.vendor_dir').'/chrisboulton/php-resque/lib/Resque.php',
             'INTERVAL'    => $input->getOption('interval'),
         );
+        if (false !== getenv('APP_INCLUDE')) {
+            $env['APP_INCLUDE'] = getenv('APP_INCLUDE');
+        }
 
         $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
         if (!empty($prefix)) {
