@@ -4,23 +4,23 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-    <route id="BCCResqueBundle_homepage" pattern="/">
+    <route id="BCCResqueBundle_homepage" path="/">
         <default key="_controller">BCCResqueBundle:Default:index</default>
     </route>
 
-    <route id="BCCResqueBundle_queue_show" pattern="/queue/{queue}">
+    <route id="BCCResqueBundle_queue_show" path="/queue/{queue}">
         <default key="_controller">BCCResqueBundle:Default:showQueue</default>
     </route>
 
-    <route id="BCCResqueBundle_failed_list" pattern="/failed/list">
+    <route id="BCCResqueBundle_failed_list" path="/failed/list">
         <default key="_controller">BCCResqueBundle:Default:listFailed</default>
     </route>
 
-    <route id="BCCResqueBundle_scheduled_list" pattern="/scheduled/list">
+    <route id="BCCResqueBundle_scheduled_list" path="/scheduled/list">
         <default key="_controller">BCCResqueBundle:Default:listScheduled</default>
     </route>
 
-    <route id="BCCResqueBundle_scheduled_timestamp" pattern="/scheduled/{timestamp}">
+    <route id="BCCResqueBundle_scheduled_timestamp" path="/scheduled/{timestamp}">
         <default key="_controller">BCCResqueBundle:Default:showTimestamp</default>
     </route>
 </routes>
