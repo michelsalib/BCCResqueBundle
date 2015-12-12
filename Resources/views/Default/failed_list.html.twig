@@ -12,6 +12,7 @@
                     <th>Failed at</th>
                     <th>Job</th>
                     <th>Error</th>
+                    <th>Backtrace</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,10 +25,13 @@
                         {{ job.exceptionClass }}<br>
                         {{ job.error }}
                     </td>
+                    <td class="span5">
+                        <pre>{{ job.backtrace |json_encode() }}</pre><br>
+                    </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         <em>empty...</em>
                     </td>
                 </tr>

@@ -85,7 +85,7 @@
                                         {% for argname, argvalue in job.args %}
                                             <li>
                                                 <span>{{ argname }}</span>
-                                                <em class="pull-right">{{ argvalue | json_encode(constant('JSON_PRETTY_PRINT')) }}</em>
+                                                <em class="pull-right">{{ argvalue | json_encode() }}</em>
                                             </li>
                                         {% endfor %}
                                     </ul>
