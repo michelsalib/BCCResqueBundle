@@ -268,4 +268,16 @@ class Resque
             $job->args['bcc_resque.retry_strategy'] = $this->globalRetryStrategy;
         }
     }
+
+    /**
+     * Checks the status of a given job.
+     *
+     * @param string $job_id
+     *
+     * @return \Resque_Job_Status
+     */
+    public function getJobStatus($job_id)
+    {
+        return new \Resque_Job_Status($job_id);
+    }
 }
