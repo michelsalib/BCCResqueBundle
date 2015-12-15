@@ -324,6 +324,7 @@ Use the `app/console bcc:resque:worker-stop` command.
 - Add a worker id to stop it: `app/console bcc:resque:worker-stop ubuntu:3949:default`
 - Add the `--all` option to stop all the workers.
 
+The [stop](https://github.com/michelsalib/BCCResqueBundle/blob/master/Worker.php#L22-L27) method will send [SIGQUIT](http://en.wikipedia.org/wiki/Unix_signal#SIGQUIT) signal, meaning Resque [will do](https://github.com/chrisboulton/php-resque/blob/master/lib/Resque/Worker.php#L355) a [graceful shutdown](https://github.com/chrisboulton/php-resque/blob/master/lib/Resque/Worker.php#L381-L389). This also means that processes do not disappear immediately from process table if they are still processing some job.
 
 ### Auto retry
 
