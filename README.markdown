@@ -30,19 +30,8 @@ Make sure you have redis installed on your machine: http://redis.io/
 
 ### Get the bundle
 
-Add to your `bcc-resque-bundle` to your dependencies:
-
-``` json
-{
-    "require": {
-        ...
-        "bcc/resque-bundle": "dev-master"
-    }
-    ...
-}
-```
-
-To install, run `php composer.phar [update|install]`.
+Add `bcc/resque-bundle` to your dependencies with composer:  
+`composer require bcc/resque-bundle`.
 
 ### Add BCCResqueBundle to your application kernel
 
