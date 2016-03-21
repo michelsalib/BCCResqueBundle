@@ -33,10 +33,10 @@ class StartScheduledWorkerCommand extends ContainerAwareCommand
             unlink($pidFile);
         }
 
-	$bootstrapLocation = $this->getContainer()->getParameter('kernel.root_dir');
-	if (Kernel::MAJOR_VERSION == 3) {
-	    $bootstrapLocation = $bootstrapLocation.'/../var';
-	}
+        $bootstrapLocation = $this->getContainer()->getParameter('kernel.root_dir');
+        if (Kernel::MAJOR_VERSION == 3) {
+            $bootstrapLocation = $bootstrapLocation.'/../var';
+        }
 
         $env = array(
 	    'APP_INCLUDE' => $bootstrapLocation.'/bootstrap.php.cache',

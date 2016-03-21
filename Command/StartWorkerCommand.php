@@ -42,12 +42,12 @@ class StartWorkerCommand extends ContainerAwareCommand
             );
         }
 
-	$bootstrapLocation = $this->getContainer()->getParameter('kernel.root_dir');
-	if (Kernel::MAJOR_VERSION == 3) {
-	    $bootstrapLocation = $bootstrapLocation.'/../var';
-	}
+        $bootstrapLocation = $this->getContainer()->getParameter('kernel.root_dir');
+        if (Kernel::MAJOR_VERSION == 3) {
+            $bootstrapLocation = $bootstrapLocation.'/../var';
+        }
 
-	$env['APP_INCLUDE'] = $bootstrapLocation.'/bootstrap.php.cache';
+        $env['APP_INCLUDE'] = $bootstrapLocation.'/bootstrap.php.cache';
         $env['COUNT']       = $input->getOption('count');
         $env['INTERVAL']    = $input->getOption('interval');
         $env['QUEUE']       = $input->getArgument('queues');
