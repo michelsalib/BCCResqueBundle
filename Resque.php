@@ -122,6 +122,41 @@ class Resque
         return null;
     }
 
+    public function enqueueOnceIn($in, Job $job, $updateTimestamp = true)
+    {
+        return $this->enqueueOnceAt(time()+$in, $job, $updateTimestamp);
+    }
+
+    private function toTimestamp($timestamp)
+	{
+		if ($timestamp instanceof \DateTime) {
+			$timestamp = $timestamp->getTimestamp();
+		}
+
+		if ((int)$timestamp != $timestamp) {
+			throw new \InvalidArgumentException(
+				'The supplied timestamp value could not be converted to an integer.'
+			);
+		}
+
+		return (int)$timestamp;
+	}
+
+    public function enqueueOnceAt($at, Job $job, $updateTimestamp = true)
+    {
+        $timestamp = $this->toTimestamp($at);
+        $queue = new ScheduledQueue($job->queue);
+        $oldTimestamp = $queue->getTimestamp($job);
+        if (!$oldTimestamp || $updateTimestamp) {
+            if ($oldTimestamp) {
+                \ResqueScheduler::removeDelayedJobFromTimestamp($oldTimestamp, $job->queue, \get_class($job), $job->args);
+            }
+            $queue->add($job, $timestamp);
+            return $this->enqueueAt($at, $job);
+        }
+
+        return null;
+    }
     public function removedDelayed(Job $job)
     {
         if ($job instanceof ContainerAwareJob) {
