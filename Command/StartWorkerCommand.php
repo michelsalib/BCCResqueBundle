@@ -108,5 +108,7 @@ class StartWorkerCommand extends ContainerAwareCommand
                 $output->writeln(\sprintf('<info>Worker started</info> %s:%s:%s', $hostname, $pid, $input->getArgument('queues')));
             }
         }
+        
+        return 0;
     }
 }
