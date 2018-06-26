@@ -25,7 +25,7 @@ class StartWorkerCommand extends ContainerAwareCommand
                 'Force cli memory_limit (expressed in Mbytes)')
             ->addOption('verbose', 'v', InputOption::VALUE_REQUIRED,
                 'Records more information than the usual logging mode', 1)
-            ->addOption('quite', 'q', InputOption::VALUE_REQUIRED, 'Disable all logs', 0);
+            ->addOption('quiet', 'q', InputOption::VALUE_REQUIRED, 'Disable all logs', 0);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -50,7 +50,7 @@ class StartWorkerCommand extends ContainerAwareCommand
         $env['INTERVAL'] = $input->getOption('interval');
         $env['QUEUE'] = $input->getArgument('queues');
         $env['VERBOSE'] = $input->getOption('verbose');
-        $isQuite = $input->getOption('quiet');
+        $isQuiet = $input->getOption('quiet');
 
         $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
         if (!empty($prefix)) {
@@ -61,7 +61,7 @@ class StartWorkerCommand extends ContainerAwareCommand
             $env['VVERBOSE'] = 1;
         }
 
-        if ($isQuite) {
+        if ($isQuiet) {
             unset($env['VERBOSE']);
         }
 
@@ -97,7 +97,7 @@ class StartWorkerCommand extends ContainerAwareCommand
             '%dir%' => __DIR__.'/../bin',
         ));
 
-        if (!$input->getOption('foreground') && !$isQuite) {
+        if (!$input->getOption('foreground') && !$isQuiet) {
             $workerCommand = strtr('nohup %cmd% > %logs_dir%/resque.log 2>&1 & echo $!', array(
                 '%cmd%' => $workerCommand,
                 '%logs_dir%' => $this->getContainer()->getParameter('kernel.logs_dir'),
