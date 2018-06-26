@@ -18,10 +18,14 @@ class StartWorkerCommand extends ContainerAwareCommand
             ->setDescription('Start a bcc resque worker')
             ->addArgument('queues', InputArgument::REQUIRED, 'Queue names (separate using comma)')
             ->addOption('count', 'c', InputOption::VALUE_REQUIRED, 'How many workers to fork', 1)
-            ->addOption('interval', 'i', InputOption::VALUE_REQUIRED, 'How often to check for new jobs across the queues', 5)
+            ->addOption('interval', 'i', InputOption::VALUE_REQUIRED,
+                'How often to check for new jobs across the queues', 5)
             ->addOption('foreground', 'f', InputOption::VALUE_NONE, 'Should the worker run in foreground')
-            ->addOption('memory-limit', 'm', InputOption::VALUE_REQUIRED, 'Force cli memory_limit (expressed in Mbytes)')
-        ;
+            ->addOption('memory-limit', 'm', InputOption::VALUE_REQUIRED,
+                'Force cli memory_limit (expressed in Mbytes)')
+            ->addOption('verbose', 'v', InputOption::VALUE_REQUIRED,
+                'Records more information than the usual logging mode', 1)
+            ->addOption('quiet', 'q', InputOption::VALUE_REQUIRED, 'Disable all logs', 0);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -42,10 +46,11 @@ class StartWorkerCommand extends ContainerAwareCommand
         }
 
         $env['APP_INCLUDE'] = $this->getContainer()->getParameter('kernel.root_dir').'/bootstrap.php.cache';
-        $env['COUNT']       = $input->getOption('count');
-        $env['INTERVAL']    = $input->getOption('interval');
-        $env['QUEUE']       = $input->getArgument('queues');
-        $env['VERBOSE']     = 1;
+        $env['COUNT'] = $input->getOption('count');
+        $env['INTERVAL'] = $input->getOption('interval');
+        $env['QUEUE'] = $input->getArgument('queues');
+        $env['VERBOSE'] = $input->getOption('verbose');
+        $isQuiet = $input->getOption('quiet');
 
         $prefix = $this->getContainer()->getParameter('bcc_resque.prefix');
         if (!empty($prefix)) {
@@ -56,12 +61,12 @@ class StartWorkerCommand extends ContainerAwareCommand
             $env['VVERBOSE'] = 1;
         }
 
-        if ($input->getOption('quiet')) {
+        if ($isQuiet) {
             unset($env['VERBOSE']);
         }
 
-        $redisHost     = $this->getContainer()->getParameter('bcc_resque.resque.redis.host');
-        $redisPort     = $this->getContainer()->getParameter('bcc_resque.resque.redis.port');
+        $redisHost = $this->getContainer()->getParameter('bcc_resque.resque.redis.host');
+        $redisPort = $this->getContainer()->getParameter('bcc_resque.resque.redis.port');
         $redisDatabase = $this->getContainer()->getParameter('bcc_resque.resque.redis.database');
 
         if ($redisHost != null && $redisPort != null) {
@@ -73,7 +78,7 @@ class StartWorkerCommand extends ContainerAwareCommand
         }
 
         $opt = '';
-        if (0 !== $m = (int) $input->getOption('memory-limit')) {
+        if (0 !== $m = (int)$input->getOption('memory-limit')) {
             $opt = sprintf('-d memory_limit=%dM', $m);
         }
 
@@ -92,23 +97,23 @@ class StartWorkerCommand extends ContainerAwareCommand
             '%dir%' => __DIR__.'/../bin',
         ));
 
-        if (!$input->getOption('foreground')) {
+        if (!$input->getOption('foreground') && !$isQuiet) {
             $workerCommand = strtr('nohup %cmd% > %logs_dir%/resque.log 2>&1 & echo $!', array(
-                '%cmd%'      => $workerCommand,
+                '%cmd%' => $workerCommand,
                 '%logs_dir%' => $this->getContainer()->getParameter('kernel.logs_dir'),
             ));
         }
 
 
-		// In windows: When you pass an environment to CMD it replaces the old environment
-		// That means we create a lot of problems with respect to user accounts and missing vars
-		// this is a workaround where we add the vars to the existing environment.
-		if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-			foreach($env as $key => $value) {
-				putenv($key."=". $value);
-			}
-			$env = null;
-		}
+        // In windows: When you pass an environment to CMD it replaces the old environment
+        // That means we create a lot of problems with respect to user accounts and missing vars
+        // this is a workaround where we add the vars to the existing environment.
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            foreach ($env as $key => $value) {
+                putenv($key."=".$value);
+            }
+            $env = null;
+        }
 
         $process = new Process($workerCommand, null, $env, null, null);
 
@@ -121,8 +126,7 @@ class StartWorkerCommand extends ContainerAwareCommand
             $process->run(function ($type, $buffer) use ($output) {
                 $output->write($buffer);
             });
-        }
-        // else we recompose and display the worker id
+        } // else we recompose and display the worker id
         else {
             $process->run();
             $pid = \trim($process->getOutput());
@@ -134,7 +138,8 @@ class StartWorkerCommand extends ContainerAwareCommand
             }
 
             if (!$input->getOption('quiet')) {
-                $output->writeln(\sprintf('<info>Worker started</info> %s:%s:%s', $hostname, $pid, $input->getArgument('queues')));
+                $output->writeln(\sprintf('<info>Worker started</info> %s:%s:%s', $hostname, $pid,
+                    $input->getArgument('queues')));
             }
         }
     }
